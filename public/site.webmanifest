@@ -1,0 +1,13 @@
+{
+  "name": "LegalDIY Divorce Education",
+  "short_name": "LegalDIY",
+  "icons": [{
+    "src": "/images/legaldiy-mark.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any"
+  }],
+  "theme_color": "#12395d",
+  "background_color": "#ffffff",
+  "display": "browser"
+}
