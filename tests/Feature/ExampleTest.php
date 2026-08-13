@@ -14,7 +14,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertRedirect('/joint-petition');
+        $response->assertRedirect('/joint-divorce');
         $response->assertStatus(301);
     }
 }
