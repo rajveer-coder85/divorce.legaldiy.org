@@ -1,19 +1,22 @@
 <?php
 
-use App\Http\Controllers\JointPetitionController;
-use App\Http\Controllers\KnowledgeController;
+use App\Http\Controllers\JourneyVettingController;
 use Illuminate\Support\Facades\Route;
 
-Route::permanentRedirect('/', '/joint-divorce')->name('home');
-Route::get('/joint-divorce', fn (JointPetitionController $controller) => $controller->show())->name('joint-divorce');
-Route::get('/joint-divorce/{slug}', fn (JointPetitionController $controller, string $slug) => $controller->show($slug))->name('joint-divorce-guide');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-// Redirect the temporary public structure to the master Joint Divorce journey.
-Route::permanentRedirect('/joint-petition', '/joint-divorce');
-Route::permanentRedirect('/joint-petition/readiness', '/joint-divorce/readiness');
-Route::permanentRedirect('/joint-petition/what-we-need-to-agree', '/joint-divorce/decisions');
-Route::permanentRedirect('/joint-petition/not-suitable', '/joint-divorce/not-suitable');
-Route::permanentRedirect('/joint-petition/why-agreement-matters', '/joint-divorce/agreement');
+Route::view('/journey', 'journey')->name('journey');
 
-// Existing assessment functionality is intentionally retained.
-Route::get('/assessment', fn (KnowledgeController $controller) => $controller->page('assessment'))->name('assessment');
+Route::prefix('journey')->name('journey.')->group(function () {
+    Route::post('/tac/send', [JourneyVettingController::class, 'sendTac'])
+        ->middleware('throttle:5,10')
+        ->name('tac.send');
+    Route::post('/tac/verify', [JourneyVettingController::class, 'verifyTac'])
+        ->middleware('throttle:10,10')
+        ->name('tac.verify');
+    Route::post('/submit', [JourneyVettingController::class, 'store'])
+        ->middleware('throttle:5,60')
+        ->name('submit');
+});

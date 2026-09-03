@@ -97,6 +97,21 @@ return [
             'retry_after' => 60,
         ],
 
+        'brevo' => [
+            'transport' => 'smtp',
+            'host' => env('BREVO_MAIL_HOST', 'smtp-relay.brevo.com'),
+            'port' => env('BREVO_MAIL_PORT', 587),
+            'encryption' => env('BREVO_MAIL_ENCRYPTION', 'tls'),
+            'username' => env('BREVO_MAIL_USERNAME'),
+            'password' => env('BREVO_MAIL_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+            'from' => [
+                'address' => env('BREVO_MAIL_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+                'name' => env('BREVO_MAIL_FROM_NAME', 'LegalDIY'),
+            ],
+        ],
+
     ],
 
     /*
