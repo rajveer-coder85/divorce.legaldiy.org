@@ -4,15 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Mail\JourneyTacMail;
 use App\Models\JourneyVettingSubmission;
+use App\Support\PhoneNumber;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class JourneyVettingController extends Controller
 {
     private const TAC_SESSION_KEY = 'journey_vetting_tac';
+
+    public function dashboard(Request $request): View
+    {
+        $search = trim((string) $request->query('search'));
+        $status = (string) $request->query('status', 'all');
+
+        $query = JourneyVettingSubmission::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('reference', 'like', "%{$search}%")
+                        ->orWhere('full_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when(in_array($status, ['pending_review', 'reviewed'], true), fn ($query) => $query->where('status', $status));
+
+        return view('vetting-dashboard', [
+            'submissions' => $query->latest('submitted_at')->paginate(15)->withQueryString(),
+            'search' => $search,
+            'status' => $status,
+            'stats' => [
+                'total' => JourneyVettingSubmission::count(),
+                'pending' => JourneyVettingSubmission::where('status', 'pending_review')->count(),
+                'today' => JourneyVettingSubmission::whereDate('submitted_at', today())->count(),
+                'agreed' => JourneyVettingSubmission::where('agreement_status', 'agree')->count(),
+            ],
+        ]);
+    }
 
     public function sendTac(Request $request): JsonResponse
     {
@@ -104,7 +134,7 @@ class JourneyVettingController extends Controller
         $validated = $request->validate([
             'full_name' => ['required', 'string', 'min:2', 'max:150'],
             'email' => ['required', 'email:rfc', 'max:254'],
-            'phone' => ['nullable', 'string', 'max:30', 'regex:/^\+?[0-9][0-9 ()-]{7,24}$/'],
+            'phone' => ['required', 'string', 'max:30'],
             'identity_type' => ['required', Rule::in(['nric', 'passport'])],
             'identity_number' => ['required', 'string', 'max:20'],
             'education_level' => ['required', Rule::in(['secondary', 'certificate_diploma', 'bachelors', 'postgraduate', 'other', 'prefer_not'])],
@@ -128,6 +158,19 @@ class JourneyVettingController extends Controller
             return $this->validationError('selected_topics', 'Simple arrangements cannot be combined with other topics.');
         }
 
+        $phone = PhoneNumber::normalize($validated['phone']);
+        if ($phone === null) {
+            return $this->validationError('phone', 'Enter a valid mobile number including its country code.');
+        }
+
+        if (JourneyVettingSubmission::where('email', $email)->exists()) {
+            return $this->validationError('email', 'A submission has already been received for this email address.');
+        }
+
+        if (JourneyVettingSubmission::where('phone', $phone)->exists()) {
+            return $this->validationError('phone', 'A submission has already been received for this mobile number.');
+        }
+
         $identityNumber = strtoupper(trim($validated['identity_number']));
         if ($validated['identity_type'] === 'nric') {
             $digits = preg_replace('/\D/', '', $identityNumber);
@@ -143,6 +186,7 @@ class JourneyVettingController extends Controller
             ...$validated,
             'reference' => 'LD-'.now()->format('ymd').'-'.Str::upper(Str::random(6)),
             'email' => $email,
+            'phone' => $phone,
             'identity_number' => $identityNumber,
             'email_verified_at' => now(),
             'submitted_at' => now(),

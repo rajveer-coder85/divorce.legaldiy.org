@@ -58,6 +58,7 @@ class JourneyVettingTest extends TestCase
 
         $submission = JourneyVettingSubmission::firstOrFail();
         $this->assertSame('900101-14-5678', $submission->identity_number);
+        $this->assertSame('+60123456789', $submission->phone);
         $this->assertSame(['children', 'property'], $submission->selected_topics);
         $this->assertStringStartsWith('LD-', $response->json('reference'));
 
@@ -72,6 +73,66 @@ class JourneyVettingTest extends TestCase
         $this->assertSame('Verify this email address before submitting the form.', $response->json('errors.email.0'));
 
         $this->assertDatabaseCount('journey_vetting_submissions', 0);
+    }
+
+    public function test_a_mobile_number_must_be_in_international_format(): void
+    {
+        $payload = $this->validPayload();
+        $payload['phone'] = '0123456789';
+        $response = $this->withSession(['journey_vetting_verified_email' => 'applicant@example.com'])
+            ->postJson(route('journey.submit'), $payload);
+        $this->assertSame(422, $response->getStatusCode(), $response->getContent());
+        $this->assertSame('Enter a valid mobile number including its country code.', $response->json('errors.phone.0'));
+    }
+
+    public function test_an_email_address_cannot_be_submitted_twice(): void
+    {
+        $this->withSession(['journey_vetting_verified_email' => 'applicant@example.com'])
+            ->postJson(route('journey.submit'), $this->validPayload());
+
+        $duplicate = $this->validPayload();
+        $duplicate['phone'] = '+60198765432';
+        $response = $this->withSession(['journey_vetting_verified_email' => 'applicant@example.com'])
+            ->postJson(route('journey.submit'), $duplicate);
+
+        $this->assertSame(422, $response->getStatusCode(), $response->getContent());
+        $this->assertSame('A submission has already been received for this email address.', $response->json('errors.email.0'));
+        $this->assertDatabaseCount('journey_vetting_submissions', 1);
+    }
+
+    public function test_a_mobile_number_cannot_be_submitted_twice(): void
+    {
+        $this->withSession(['journey_vetting_verified_email' => 'applicant@example.com'])
+            ->postJson(route('journey.submit'), $this->validPayload());
+
+        $duplicate = $this->validPayload();
+        $duplicate['email'] = 'second@example.com';
+        $response = $this->withSession(['journey_vetting_verified_email' => 'second@example.com'])
+            ->postJson(route('journey.submit'), $duplicate);
+
+        $this->assertSame(422, $response->getStatusCode(), $response->getContent());
+        $this->assertSame('A submission has already been received for this mobile number.', $response->json('errors.phone.0'));
+        $this->assertDatabaseCount('journey_vetting_submissions', 1);
+    }
+
+    public function test_the_temporary_dashboard_lists_submissions_with_masked_identity_numbers(): void
+    {
+        JourneyVettingSubmission::create([
+            ...$this->validPayload(),
+            'reference' => 'LD-260904-ABC123',
+            'identity_number' => '900101-14-5678',
+            'email_verified_at' => now(),
+            'submitted_at' => now(),
+            'status' => 'pending_review',
+        ]);
+
+        $this->get(route('journey.dashboard'))
+            ->assertOk()
+            ->assertSee('Vetting dashboard')
+            ->assertSee('Nur Aisyah Ahmad')
+            ->assertSee('applicant@example.com')
+            ->assertSee('••••••-••-5678')
+            ->assertDontSee('900101-14-5678');
     }
 
     private function validPayload(): array

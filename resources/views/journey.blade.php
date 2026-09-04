@@ -59,8 +59,10 @@
                     <small>We will send a six-digit TAC to verify this address.</small>
                 </label>
                 <label class="journey-field journey-field-wide">
-                    <span>Mobile number <em>Optional</em></span>
-                    <input type="tel" name="phone" autocomplete="tel" maxlength="30" placeholder="e.g. +60 12-345 6789">
+                    <span>Mobile number</span>
+                    <input type="tel" name="phone_display" autocomplete="tel-national" maxlength="30" required placeholder="012 345 6789" data-phone-input>
+                    <input type="hidden" name="phone" data-phone-e164>
+                    <small>Select your country code and enter a valid mobile number. Malaysia is selected by default.</small>
                 </label>
 
                 <fieldset class="journey-field journey-field-wide identity-fieldset">
@@ -85,10 +87,15 @@
             <p class="eyebrow"><span></span>Verify your email</p>
             <h1>Enter your six-digit TAC.</h1>
             <p class="journey-intro">We sent the code to <strong data-tac-email></strong>. It expires in 10 minutes.</p>
-            <label class="journey-field tac-field">
-                <span>Email verification code</span>
-                <input type="text" name="tac_code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
-            </label>
+            <fieldset class="journey-field tac-field">
+                <legend>Email verification code</legend>
+                <div class="tac-boxes" data-tac-boxes>
+                    @foreach (range(1, 6) as $digit)
+                        <input type="text" inputmode="numeric" autocomplete="{{ $digit === 1 ? 'one-time-code' : 'off' }}" pattern="[0-9]" maxlength="1" required aria-label="Verification code digit {{ $digit }}" data-tac-digit>
+                    @endforeach
+                </div>
+                <small>Enter the six digits from your email.</small>
+            </fieldset>
             <div class="journey-resend"><button type="button" class="quiet-button" data-resend-tac disabled>Send another code <span data-resend-countdown>(60s)</span></button></div>
             <div class="journey-actions"><button class="button button-outline" type="button" data-journey-previous>Change details</button><button class="button" type="button" data-verify-tac>Verify &amp; Continue <span>→</span></button></div>
         </section>

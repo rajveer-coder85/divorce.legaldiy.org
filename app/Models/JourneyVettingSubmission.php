@@ -35,4 +35,14 @@ class JourneyVettingSubmission extends Model
             'submitted_at' => 'datetime',
         ];
     }
+
+    public function getMaskedIdentityNumberAttribute(): string
+    {
+        $number = (string) $this->identity_number;
+        $suffix = substr(preg_replace('/[^A-Z0-9]/i', '', $number), -4);
+
+        return $this->identity_type === 'nric'
+            ? '••••••-••-'.$suffix
+            : '••••••'.$suffix;
+    }
 }

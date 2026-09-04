@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\JourneyVettingController;
+use App\Http\Controllers\KnowledgeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,6 +9,12 @@ Route::get('/', function () {
 });
 
 Route::view('/journey', 'journey')->name('journey');
+Route::view('/knowledge/children-maintenance/examples', 'knowledge.children-maintenance-examples')
+    ->name('knowledge.children-maintenance.examples');
+Route::get('/knowledge/{guide}', [KnowledgeController::class, 'show'])
+    ->whereIn('guide', ['children-maintenance', 'property', 'alimony', 'joint-petition'])
+    ->name('knowledge.show');
+Route::get('/vetting-dashboard', [JourneyVettingController::class, 'dashboard'])->name('journey.dashboard');
 
 Route::prefix('journey')->name('journey.')->group(function () {
     Route::post('/tac/send', [JourneyVettingController::class, 'sendTac'])
