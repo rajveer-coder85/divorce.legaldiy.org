@@ -116,7 +116,7 @@ class JourneyVettingTest extends TestCase
         $this->assertDatabaseCount('journey_vetting_submissions', 1);
     }
 
-    public function test_the_temporary_dashboard_lists_submissions_with_masked_identity_numbers(): void
+    public function test_the_temporary_dashboard_lists_submissions_with_full_identity_numbers(): void
     {
         JourneyVettingSubmission::create([
             ...$this->validPayload(),
@@ -132,8 +132,9 @@ class JourneyVettingTest extends TestCase
             ->assertSee('LegalDIY dashboard')
             ->assertSee('Nur Aisyah Ahmad')
             ->assertSee('applicant@example.com')
-            ->assertSee('••••••-••-5678')
-            ->assertDontSee('900101-14-5678');
+            ->assertSee('900101-14-5678')
+            ->assertSee('RM 4,000–RM 5,999')
+            ->assertDontSee('••••••-••-5678');
     }
 
     private function validPayload(): array

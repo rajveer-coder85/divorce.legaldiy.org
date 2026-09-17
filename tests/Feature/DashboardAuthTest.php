@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Inquiry;
 use App\Models\User;
+use App\Mail\CaseAccessGrantedMail;
 use App\Mail\CaseAccessTacMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -61,8 +62,15 @@ class DashboardAuthTest extends TestCase
         Mail::fake();
         $this->post(route('journey.dashboard.access', $submission), ['enable' => 1])
             ->assertRedirect(route('journey.dashboard', ['tab' => 'slugs']));
+        Mail::assertSent(CaseAccessGrantedMail::class, fn ($mail) => $mail->hasTo($submission->email));
         $submission->refresh();
         $this->assertNotNull($submission->access_enabled_at);
+        Mail::fake();
+        $this->post(route('journey.dashboard.slug.email', $submission))
+            ->assertRedirect(route('journey.dashboard', ['tab' => 'slugs']))
+            ->assertSessionHas('slug_email_sent', $submission->id);
+        Mail::assertSent(CaseAccessGrantedMail::class, fn ($mail) => $mail->hasTo($submission->email)
+            && $mail->privateUrl === route('journey.access', $submission->access_slug));
         $this->get(route('journey.access', $submission->access_slug))->assertOk()->assertSee('Create your account')->assertDontSee($submission->reference);
         $this->post(route('journey.access.tac', $submission->access_slug), ['email' => $submission->email])
             ->assertRedirect(route('journey.access', $submission->access_slug));

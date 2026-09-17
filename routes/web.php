@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [JourneyVettingController::class, 'dashboard'])->name('journey.dashboard');
     Route::post('/dashboard/submissions/{submission}/slug', [JourneyVettingController::class, 'createSlug'])->name('journey.dashboard.slug');
     Route::post('/dashboard/submissions/{submission}/access', [JourneyVettingController::class, 'toggleSlugAccess'])->name('journey.dashboard.access');
+    Route::post('/dashboard/submissions/{submission}/slug/email', [JourneyVettingController::class, 'sendSlugEmail'])->middleware('throttle:5,10')->name('journey.dashboard.slug.email');
     Route::get('/vetting-dashboard', fn () => redirect()->route('journey.dashboard'));
     Route::post('/dashboard/logout', [DashboardAuthController::class, 'destroy'])->name('dashboard.logout');
 });

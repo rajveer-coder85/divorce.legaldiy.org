@@ -40,8 +40,18 @@ class JourneyVettingController extends Controller
             })
             ->when(in_array($status, ['pending_review', 'reviewed'], true), fn ($query) => $query->where('status', $status));
 
+        $submissions = $query->latest('submitted_at')->paginate(15)->withQueryString();
+        $accessStates = $submissions->getCollection()->mapWithKeys(fn ($submission) => [
+            $submission->reference => [
+                'enabled' => (bool) $submission->access_enabled_at,
+                'url' => route('journey.dashboard.access', $submission),
+                'emailUrl' => route('journey.dashboard.slug.email', $submission),
+            ],
+        ])->all();
+
         return view('vetting-dashboard', [
-            'submissions' => $query->latest('submitted_at')->paginate(15)->withQueryString(),
+            'submissions' => $submissions,
+            'accessStates' => $accessStates,
             'search' => $search,
             'status' => $status,
             'tab' => $tab,
@@ -92,6 +102,31 @@ class JourneyVettingController extends Controller
         }
         Log::info($enable ? 'Case URL access enabled' : 'Case URL access revoked', ['submission' => $submission->reference, 'administrator' => $request->user()->id]);
         return redirect()->route('journey.dashboard', ['tab' => 'slugs'])->with('access_updated', $submission->id);
+    }
+
+    public function sendSlugEmail(Request $request, JourneyVettingSubmission $submission): RedirectResponse
+    {
+        abort_unless($submission->access_slug, 422, 'Create a URL before sending an email.');
+        abort_unless($submission->access_enabled_at, 422, 'Enable access before sending the private URL.');
+
+        try {
+            Mail::mailer('brevo')->to($submission->email)->send(new CaseAccessGrantedMail(
+                $submission->full_name,
+                route('journey.access', $submission->access_slug),
+                ! ApplicantAccount::where('journey_vetting_submission_id', $submission->id)->exists(),
+            ));
+            $submission->update(['access_invited_at' => now()]);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return redirect()->route('journey.dashboard', ['tab' => 'slugs'])
+                ->withErrors(['access' => 'The private URL email could not be sent. Please try again.']);
+        }
+
+        Log::info('Case URL email sent', ['submission' => $submission->reference, 'administrator' => $request->user()->id]);
+
+        return redirect()->route('journey.dashboard', ['tab' => 'slugs'])
+            ->with('slug_email_sent', $submission->id);
     }
 
     public function accessLink(Request $request, string $slug): View

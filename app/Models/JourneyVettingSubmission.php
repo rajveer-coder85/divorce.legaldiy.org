@@ -60,4 +60,18 @@ class JourneyVettingSubmission extends Model
             ? '••••••-••-'.$suffix
             : '••••••'.$suffix;
     }
+
+    public function getMonthlyIncomeLabelAttribute(): string
+    {
+        return match ($this->monthly_income_range) {
+            'none' => 'No current income',
+            'under_2000' => 'Below RM 2,000',
+            '2000_3999' => 'RM 2,000–RM 3,999',
+            '4000_5999' => 'RM 4,000–RM 5,999',
+            '6000_9999' => 'RM 6,000–RM 9,999',
+            '10000_plus' => 'RM 10,000 or more',
+            'prefer_not' => 'Prefer not to say',
+            default => 'Not recorded',
+        };
+    }
 }
