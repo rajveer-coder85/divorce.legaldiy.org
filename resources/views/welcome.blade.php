@@ -54,8 +54,10 @@
         <section class="subsidy-statement" aria-labelledby="subsidy-statement-title">
             <div class="section-shell subsidy-statement-inner reveal">
                 <p class="eyebrow light"><span></span>Subsidised legal support</p>
-                <h2 id="subsidy-statement-title">If approved, you pay a maximum of <strong>RM 2,000.00</strong> in legal fees.</h2>
-                <p>Our organisation engages legal counsel and covers the remaining legal fees. Support is subject to eligibility assessment and approval, and court filing charges are separate. Submitting an application does not guarantee approval.</p>
+                <div class="subsidy-statement-content">
+                    <h2 id="subsidy-statement-title">If approved, you pay a maximum of <strong>RM 2,000.00</strong><span>in legal fees.</span></h2>
+                    <div class="subsidy-statement-detail"><p>Our organisation engages legal counsel and covers the remaining legal fees. Support is subject to eligibility assessment and approval, and court filing charges are separate. Submitting an application does not guarantee approval.</p></div>
+                </div>
             </div>
         </section>
 
@@ -156,26 +158,22 @@
 
         <section class="inquiry-section section-pad" id="inquiry">
             <div class="section-shell inquiry-shell">
-                <div class="section-heading reveal"><p class="eyebrow"><span></span>Have a question?</p><h2>Send us an <em>enquiry.</em></h2><p>Verify your email first, then tell us how we can help. We will use your details only to review and respond to your enquiry.</p></div>
+                <div class="section-heading reveal"><p class="eyebrow"><span></span>Have a question?</p><h2>Contact us <em>now.</em></h2><p>Complete the form below. When you click Contact Us Now, we will send a six-digit TAC to verify your email before submitting your enquiry.</p></div>
                 <form class="inquiry-form reveal" data-inquiry-form data-send-url="{{ route('inquiry.tac.send') }}" data-verify-url="{{ route('inquiry.tac.verify') }}" data-submit-url="{{ route('inquiry.submit') }}" novalidate>
                     <div class="journey-form-message" data-inquiry-message hidden></div>
-                    <div data-inquiry-stage="contact">
+                    <div data-inquiry-stage="details">
                         <label><span>Full name</span><input type="text" name="full_name" autocomplete="name" maxlength="150" required></label>
                         <label><span>Email address</span><input type="email" name="email" autocomplete="email" maxlength="254" required></label>
-                        <button class="button" type="button" data-inquiry-send>Send verification code <span>→</span></button>
-                    </div>
-                    <div data-inquiry-stage="verify" hidden>
-                        <p class="inquiry-stage-note">Enter the code sent to <strong data-inquiry-email></strong>.</p>
-                        <div class="tac-boxes" data-inquiry-tac aria-label="Six-digit verification code">@for ($digit = 1; $digit <= 6; $digit++)<input type="text" inputmode="numeric" autocomplete="{{ $digit === 1 ? 'one-time-code' : 'off' }}" pattern="[0-9]" maxlength="1" required aria-label="Verification code digit {{ $digit }}" data-inquiry-digit>@endfor</div>
-                        <div class="inquiry-button-row"><button class="button button-outline" type="button" data-inquiry-change>Change email</button><button class="button" type="button" data-inquiry-verify>Verify email <span>→</span></button></div>
-                        <button class="quiet-button inquiry-resend" type="button" data-inquiry-resend>Send another code</button>
-                    </div>
-                    <div data-inquiry-stage="details" hidden>
-                        <div class="verified-email"><span aria-hidden="true">✓</span><div><strong>Email verified</strong><small data-inquiry-verified-email></small></div></div>
-                        <label><span>What is your enquiry about?</span><select name="topic" required><option value="">Choose a topic</option><option value="getting_started">Getting started</option><option value="children">Children and maintenance</option><option value="property">Property</option><option value="spousal_maintenance">Spousal maintenance</option><option value="court_process">Joint Petition and Court process</option><option value="costs">Costs and payments</option><option value="technical">Website support</option><option value="other">Other</option></select></label>
+                        <input type="hidden" name="topic" value="other">
                         <label><span>Your enquiry</span><textarea name="message" rows="5" minlength="10" maxlength="2000" required placeholder="Tell us what you would like help with."></textarea><small>10–2,000 characters</small></label>
                         <label class="inquiry-consent"><input type="checkbox" name="privacy_consent" value="1" required><span>I consent to LegalDIY storing these details to review and respond to my enquiry.</span></label>
-                        <button class="button" type="submit">Send enquiry <span>→</span></button>
+                        <button class="button" type="button" data-inquiry-send>Contact Us Now <span>→</span></button>
+                    </div>
+                    <div data-inquiry-stage="verify" hidden>
+                        <div class="inquiry-verify-heading"><span aria-hidden="true">✉</span><div><strong>Check your email</strong><p class="inquiry-stage-note">Enter the six-digit TAC sent to <b data-inquiry-email></b> to submit your enquiry.</p></div></div>
+                        <div class="tac-boxes" data-inquiry-tac aria-label="Six-digit verification code">@for ($digit = 1; $digit <= 6; $digit++)<input type="text" inputmode="numeric" autocomplete="{{ $digit === 1 ? 'one-time-code' : 'off' }}" pattern="[0-9]" maxlength="1" required aria-label="Verification code digit {{ $digit }}" data-inquiry-digit>@endfor</div>
+                        <div class="inquiry-button-row"><button class="button button-outline" type="button" data-inquiry-change>Edit details</button><button class="button" type="submit">Verify &amp; Submit <span>→</span></button></div>
+                        <button class="quiet-button inquiry-resend" type="button" data-inquiry-resend>Send another TAC</button>
                     </div>
                     <div class="inquiry-success" data-inquiry-stage="success" hidden><span>✓</span><h3>Enquiry received.</h3><p>Thank you. Your reference is <strong data-inquiry-reference></strong>. Keep it for future correspondence.</p></div>
                 </form>

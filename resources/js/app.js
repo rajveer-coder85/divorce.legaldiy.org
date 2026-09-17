@@ -82,8 +82,9 @@ if (inquiryForm) {
         button.disabled = busy; button.innerHTML = busy ? label : button.dataset.label;
     };
     const contact = () => ({ full_name: inquiryForm.elements.full_name.value.trim(), email: inquiryForm.elements.email.value.trim() });
-    const contactValid = () => {
-        const fields = [inquiryForm.elements.full_name, inquiryForm.elements.email];
+    const inquiryPayload = () => ({ ...contact(), topic: inquiryForm.elements.topic.value, message: inquiryForm.elements.message.value.trim(), privacy_consent: inquiryForm.elements.privacy_consent.checked ? '1' : '' });
+    const detailsValid = () => {
+        const fields = [inquiryForm.elements.full_name, inquiryForm.elements.email, inquiryForm.elements.topic, inquiryForm.elements.message, inquiryForm.elements.privacy_consent];
         const invalid = fields.find((field) => !field.checkValidity()); invalid?.reportValidity(); return !invalid;
     };
 
@@ -97,7 +98,7 @@ if (inquiryForm) {
     });
 
     const sendInquiryTac = async (button) => {
-        if (!contactValid()) return;
+        if (!detailsValid()) return;
         setInquiryBusy(button, true, 'Sending…'); showInquiryMessage();
         try { const data = await postInquiry(inquiryForm.dataset.sendUrl, contact()); inquiryForm.querySelector('[data-inquiry-email]').textContent = contact().email; digits.forEach((digit) => { digit.value = ''; }); showStage('verify'); showInquiryMessage(data.message, true); digits[0]?.focus(); }
         catch (error) { showInquiryMessage(error.message); }
@@ -105,18 +106,16 @@ if (inquiryForm) {
     };
     inquiryForm.querySelector('[data-inquiry-send]').addEventListener('click', (event) => sendInquiryTac(event.currentTarget));
     inquiryForm.querySelector('[data-inquiry-resend]').addEventListener('click', (event) => sendInquiryTac(event.currentTarget));
-    inquiryForm.querySelector('[data-inquiry-change]').addEventListener('click', () => { showInquiryMessage(); showStage('contact'); });
-    inquiryForm.querySelector('[data-inquiry-verify]').addEventListener('click', async (event) => {
-        const code = digits.map((digit) => digit.value).join(''); if (!/^\d{6}$/.test(code)) return showInquiryMessage('Enter all six digits.');
-        setInquiryBusy(event.currentTarget, true, 'Verifying…'); showInquiryMessage();
-        try { const data = await postInquiry(inquiryForm.dataset.verifyUrl, { email: contact().email, code }); inquiryForm.querySelector('[data-inquiry-verified-email]').textContent = contact().email; showStage('details'); showInquiryMessage(data.message, true); }
-        catch (error) { showInquiryMessage(error.message); }
-        finally { setInquiryBusy(event.currentTarget, false); }
-    });
+    inquiryForm.querySelector('[data-inquiry-change]').addEventListener('click', () => { showInquiryMessage(); showStage('details'); });
     inquiryForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); if (!inquiryForm.checkValidity()) return inquiryForm.reportValidity();
-        const button = inquiryForm.querySelector('[type="submit"]'); setInquiryBusy(button, true, 'Sending…'); showInquiryMessage();
-        try { const data = await postInquiry(inquiryForm.dataset.submitUrl, { ...contact(), topic: inquiryForm.elements.topic.value, message: inquiryForm.elements.message.value.trim(), privacy_consent: inquiryForm.elements.privacy_consent.checked ? '1' : '' }); inquiryForm.querySelector('[data-inquiry-reference]').textContent = data.reference; showStage('success'); showInquiryMessage(); }
+        event.preventDefault();
+        const code = digits.map((digit) => digit.value).join(''); if (!/^\d{6}$/.test(code)) return showInquiryMessage('Enter all six digits.');
+        const button = inquiryForm.querySelector('[type="submit"]'); setInquiryBusy(button, true, 'Submitting…'); showInquiryMessage();
+        try {
+            await postInquiry(inquiryForm.dataset.verifyUrl, { email: contact().email, code });
+            const data = await postInquiry(inquiryForm.dataset.submitUrl, inquiryPayload());
+            inquiryForm.querySelector('[data-inquiry-reference]').textContent = data.reference; showStage('success'); showInquiryMessage();
+        }
         catch (error) { showInquiryMessage(error.message); }
         finally { setInquiryBusy(button, false); }
     });

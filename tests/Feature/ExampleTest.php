@@ -45,7 +45,8 @@ class ExampleTest extends TestCase
             ->assertSee('qualify for subsidised legal fees')
             ->assertSee('payment-card-grid', false)
             ->assertSee('data-inquiry-form', false)
-            ->assertSee('Send verification code')
+            ->assertSee('Contact Us Now')
+            ->assertSee('Verify &amp; Submit', false)
             ->assertSee('Penyata Kanak-Kanak')
             ->assertDontSee('Do both of you want to divorce?')
             ->assertDontSee('Agreement checkpoint');
