@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="LegalDIY helps Malaysian couples understand, agree, and prepare for the Joint Petition divorce journey.">
+    <meta name="description" content="Learn how a Joint Petition divorce works in Malaysia and apply to be assessed for subsidised legal assistance through counsel engaged by our organisation.">
     <meta name="theme-color" content="#12385f">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>LegalDIY — Your Joint Petition Journey</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -21,7 +22,7 @@
             </button>
             <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation" data-navigation>
                 <a href="#your-journey">Your Journey</a><a href="#court-journey">Court Journey</a><a href="#topics">Learn</a><a href="#about">About</a>
-                <a class="button button-small" href="{{ route('journey') }}">Start Your Journey</a>
+                <a class="button button-small" href="{{ route('journey') }}">Apply for Support</a>
             </nav>
         </div>
     </header>
@@ -31,15 +32,15 @@
             <div class="hero-glow hero-glow-one" aria-hidden="true"></div><div class="hero-glow hero-glow-two" aria-hidden="true"></div>
             <div class="section-shell hero-grid">
                 <div class="hero-copy reveal">
-                    <p class="eyebrow"><span></span>A clearer way forward</p>
-                    <h1>Thinking about <em>divorce?</em></h1>
-                    <p class="hero-lead">Understand what you and your spouse need to agree on before proceeding with a Joint Petition.</p>
-                    <p class="hero-support">LegalDIY guides you through the important decisions first — then explains the court journey that follows.</p>
+                    <p class="eyebrow"><span></span>Joint Petition divorce education</p>
+                    <h1>Understand the journey. <em>Move forward together.</em></h1>
+                    <p class="hero-lead">Learn what a Joint Petition divorce involves, what both spouses need to agree on, and how to approach the court process.</p>
+                    <p class="hero-support">Our public education guides are free and available to everyone.</p>
                     <div class="button-row">
-                        <a class="button" href="{{ route('journey') }}">Start Your Journey <span aria-hidden="true">→</span></a>
-                        <a class="text-link" href="#court-journey">How a Joint Petition Works <span aria-hidden="true">↘</span></a>
+                        <a class="button" href="#topics">Explore Joint Petition Education <span aria-hidden="true">→</span></a>
+                        <a class="text-link" href="{{ route('journey') }}">Apply for an Assessment <span aria-hidden="true">↘</span></a>
                     </div>
-                    <p class="hero-note"><span aria-hidden="true">✓</span> Clear information. No legal jargon.</p>
+                    <p class="hero-note"><span aria-hidden="true">✓</span> Free legal education. Clear information. No legal jargon.</p>
                 </div>
                 <div class="hero-visual reveal reveal-delay" aria-label="Your path from questions to a clear way forward">
                     <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
@@ -47,6 +48,14 @@
                     <div class="visual-card visual-card-top"><b>01</b><p>Start with your situation</p></div>
                     <div class="visual-card visual-card-bottom"><b>02</b><p>Move forward together</p></div>
                 </div>
+            </div>
+        </section>
+
+        <section class="subsidy-statement" aria-labelledby="subsidy-statement-title">
+            <div class="section-shell subsidy-statement-inner reveal">
+                <p class="eyebrow light"><span></span>Subsidised legal support</p>
+                <h2 id="subsidy-statement-title">If approved, you pay a maximum of <strong>RM 2,000.00</strong> in legal fees.</h2>
+                <p>Our organisation engages legal counsel and covers the remaining legal fees. Support is subject to eligibility assessment and approval, and court filing charges are separate. Submitting an application does not guarantee approval.</p>
             </div>
         </section>
 
@@ -119,10 +128,64 @@
             </div>
         </section>
 
+        <section class="cost-section section-pad" id="cost">
+            <div class="section-shell">
+                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>Subsidised legal support</p><h2>Joint Petition <em>Divorce Cost</em></h2><p>This website supports applicants who qualify for subsidised legal fees. <strong>Eligible applicants pay a maximum of RM 2,000.00, excluding filing charges.</strong> Our organisation covers the remaining legal fees.</p></div>
+                <div class="cost-calculator cost-calculator-simple reveal">
+                    <aside class="cost-summary" aria-live="polite">
+                        <div class="payment-card-grid">
+                        <article class="payment-card payment-card-service">
+                            <div class="payment-card-head"><span>Maximum contribution</span><strong>LegalDIY</strong></div>
+                            <b>Up to RM 2,000.00</b>
+                            <p class="support-qualification"><strong>Subject to eligibility</strong> Our organisation covers the remaining legal fees for applicants who qualify.</p>
+                        </article>
+                        <article class="payment-card payment-card-court">
+                            <div class="payment-card-head"><span>Paid by filing stage</span><strong>Court-paper charges</strong></div>
+                            <p class="payment-timing"><strong>Paid progressively</strong> Each charge is paid only when the relevant document is filed.</p>
+                            <ul><li><span>Petisyen Perceraian Bersama</span><b>RM160.00</b></li><li><span>Afidavit</span><b>RM16.00</b></li><li><span>Penyata Kanak-Kanak<br><small>Only where children are involved</small></span><b>RM16.00</b></li><li><span>Decree Nisi</span><b>RM300.00</b></li><li><span>Perintah</span><b>RM300.00</b></li><li><span>Notis Permohonan Menjadikan Decree Nisi Mutlak</span><b>RM40.00</b></li><li><span>Sijil Menjadikan Decree Nisi Mutlak</span><b>RM40.00</b></li></ul>
+                            <div class="payment-card-subtotal"><span>Estimated total paid across the filing stages</span><b>RM856.00–RM872.00</b></div>
+                        </article>
+                        </div>
+                        <div class="cost-grand-total"><div><span>Maximum estimated amount you pay</span><small>RM 2,000 contribution + applicable filing charges</small></div><strong>RM 2,856–RM 2,872</strong></div>
+                        <a class="button" href="{{ route('journey') }}">Apply for Subsidised Legal Support <span>→</span></a>
+                    </aside>
+                </div>
+                <p class="cost-note reveal"><strong>About this support:</strong> Subsidised legal fees are subject to our organisation’s eligibility assessment and approval. Court-paper charges are paid when each relevant document is filed—not together upfront. The Penyata Kanak-Kanak charge applies only where children are involved. Exceptional applications, contested issues, valuations, transfers, taxes, translations, revised Court charges, and other third-party costs are not included.</p>
+            </div>
+        </section>
+
+        <section class="inquiry-section section-pad" id="inquiry">
+            <div class="section-shell inquiry-shell">
+                <div class="section-heading reveal"><p class="eyebrow"><span></span>Have a question?</p><h2>Send us an <em>enquiry.</em></h2><p>Verify your email first, then tell us how we can help. We will use your details only to review and respond to your enquiry.</p></div>
+                <form class="inquiry-form reveal" data-inquiry-form data-send-url="{{ route('inquiry.tac.send') }}" data-verify-url="{{ route('inquiry.tac.verify') }}" data-submit-url="{{ route('inquiry.submit') }}" novalidate>
+                    <div class="journey-form-message" data-inquiry-message hidden></div>
+                    <div data-inquiry-stage="contact">
+                        <label><span>Full name</span><input type="text" name="full_name" autocomplete="name" maxlength="150" required></label>
+                        <label><span>Email address</span><input type="email" name="email" autocomplete="email" maxlength="254" required></label>
+                        <button class="button" type="button" data-inquiry-send>Send verification code <span>→</span></button>
+                    </div>
+                    <div data-inquiry-stage="verify" hidden>
+                        <p class="inquiry-stage-note">Enter the code sent to <strong data-inquiry-email></strong>.</p>
+                        <div class="tac-boxes" data-inquiry-tac aria-label="Six-digit verification code">@for ($digit = 1; $digit <= 6; $digit++)<input type="text" inputmode="numeric" autocomplete="{{ $digit === 1 ? 'one-time-code' : 'off' }}" pattern="[0-9]" maxlength="1" required aria-label="Verification code digit {{ $digit }}" data-inquiry-digit>@endfor</div>
+                        <div class="inquiry-button-row"><button class="button button-outline" type="button" data-inquiry-change>Change email</button><button class="button" type="button" data-inquiry-verify>Verify email <span>→</span></button></div>
+                        <button class="quiet-button inquiry-resend" type="button" data-inquiry-resend>Send another code</button>
+                    </div>
+                    <div data-inquiry-stage="details" hidden>
+                        <div class="verified-email"><span aria-hidden="true">✓</span><div><strong>Email verified</strong><small data-inquiry-verified-email></small></div></div>
+                        <label><span>What is your enquiry about?</span><select name="topic" required><option value="">Choose a topic</option><option value="getting_started">Getting started</option><option value="children">Children and maintenance</option><option value="property">Property</option><option value="spousal_maintenance">Spousal maintenance</option><option value="court_process">Joint Petition and Court process</option><option value="costs">Costs and payments</option><option value="technical">Website support</option><option value="other">Other</option></select></label>
+                        <label><span>Your enquiry</span><textarea name="message" rows="5" minlength="10" maxlength="2000" required placeholder="Tell us what you would like help with."></textarea><small>10–2,000 characters</small></label>
+                        <label class="inquiry-consent"><input type="checkbox" name="privacy_consent" value="1" required><span>I consent to LegalDIY storing these details to review and respond to my enquiry.</span></label>
+                        <button class="button" type="submit">Send enquiry <span>→</span></button>
+                    </div>
+                    <div class="inquiry-success" data-inquiry-stage="success" hidden><span>✓</span><h3>Enquiry received.</h3><p>Thank you. Your reference is <strong data-inquiry-reference></strong>. Keep it for future correspondence.</p></div>
+                </form>
+            </div>
+        </section>
+
         <section class="method-section section-pad" id="about">
             <div class="section-shell"><div class="section-heading centered reveal"><p class="eyebrow light"><span></span>How LegalDIY fits in</p><h2>Understand. Agree. <em>Prepare. Proceed.</em></h2><p>LegalDIY is organised around your actual journey — not a library of legal topics.</p></div>
                 <div class="method-flow reveal"><div><span>01</span><strong>Understand</strong><small>Know what matters.</small></div><i>→</i><div><span>02</span><strong>Discuss</strong><small>Explore your situation.</small></div><i>→</i><div><span>03</span><strong>Agree</strong><small>Reach arrangements.</small></div><i>→</i><div><span>04</span><strong>Prepare</strong><small>Build the information.</small></div><i>→</i><div><span>05</span><strong>Proceed</strong><small>Follow each step.</small></div></div>
-                <div class="center-action"><a class="button button-teal" href="{{ route('journey') }}">Start Your Journey <span>→</span></a></div>
+                <div class="center-action"><a class="button button-teal" href="{{ route('journey') }}">Apply for Subsidised Legal Support <span>→</span></a></div>
             </div>
         </section>
 

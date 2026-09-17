@@ -12,7 +12,7 @@
     <a class="skip-link" href="#main-content">Skip to content</a>
     <main id="main-content" class="children-learning story-library">
         <header class="knowledge-hero">
-            <p class="eyebrow"><span></span>Children &amp; child maintenance</p>
+            <div class="knowledge-title-row"><p class="eyebrow"><span></span>Children &amp; child maintenance</p><a class="knowledge-home" href="{{ url('/') }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 8-7 8 7v10h-6v-6h-4v6H4Z"/></svg><span>Home</span></a></div>
             <h1>Stories from different families.</h1>
             <p>These fictional stories demonstrate a way of thinking through common questions. They do not prescribe the arrangement your family should use.</p>
         </header>

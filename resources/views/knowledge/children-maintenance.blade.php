@@ -12,9 +12,11 @@
     <a class="skip-link" href="#main-content">Skip to content</a>
     <main id="main-content" class="children-learning" data-children-learning data-journey-url="{{ route('journey') }}" data-examples-url="{{ route('knowledge.children-maintenance.examples') }}">
         <header class="knowledge-hero children-learning-hero">
-            <p class="eyebrow"><span></span>Children &amp; child maintenance</p>
+            <div class="knowledge-title-row"><p class="eyebrow"><span></span>Children &amp; child maintenance</p><a class="knowledge-home" href="{{ url('/') }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 8-7 8 7v10h-6v-6h-4v6H4Z"/></svg><span>Home</span></a></div>
             <a class="text-link learning-examples-link" href="{{ route('knowledge.children-maintenance.examples') }}">Explore examples <span aria-hidden="true">→</span></a>
         </header>
+
+        <aside class="law-scope"><strong>Legal scope</strong><p>This guide explains Part VIII of Malaysia’s Law Reform (Marriage and Divorce) Act 1976 (Act 164), principally for civil, non-Muslim marriages. It provides general legal education and does not replace advice on a particular family or court order.</p></aside>
 
         <nav class="learning-step-nav" aria-label="Children learning topics">
             @foreach (['Custody', 'Care & welfare', 'Access', 'Maintenance', 'Duration & changes', 'Agreement check'] as $label)
@@ -32,6 +34,7 @@
                 <article><h3>What does custody mean?</h3><p>Custody concerns responsibility and authority for the child, not only where the child sleeps. An order may include conditions about residence, upbringing, and parental arrangements.</p></article>
                 <article><h3>Can custody be shared?</h3><p>Joint custody can preserve both parents’ involvement in important matters. It does not automatically require the child to spend exactly half their time with each parent.</p></article>
             </div>
+            <details class="law-reference"><summary><span>Legal reference</span><strong>Sections 87 and 88(1)</strong><i>+</i></summary><div><h3>Who is a child?</h3><blockquote>“Child” has the meaning of “child of the marriage” as defined in section 2 who is under the age of eighteen years.</blockquote><p><b>Section 87</b> supplies the definition used in Part VIII. <b>Section 88(1)</b> gives the Court power to place a child with either parent or, in exceptional circumstances, another suitable relative, child-welfare association, or person.</p><p class="case-note"><b>Case note:</b> The scanned commentary discusses <i>Lee Wei Yen v Halim Berbar</i> [2011] 1 LNS 417 when distinguishing custody from broader parental responsibility and guardianship.</p></div></details>
         </section>
 
         <section class="learning-panel" data-learning-panel="2" hidden>
@@ -45,6 +48,7 @@
                 <article><h3>Brothers and sisters</h3><p>The Court is not required to place every sibling with the same person. Each child’s welfare may be considered separately.</p></article>
                 <article><h3>Parents’ wishes</h3><p>The parents’ wishes are relevant, as may be the child’s independent wishes, but both remain subject to the overriding welfare principle.</p></article>
             </div>
+            <details class="law-reference"><summary><span>Legal reference</span><strong>Section 88(2)–(4)</strong><i>+</i></summary><div><blockquote>“The paramount consideration shall be the welfare of the child.”</blockquote><p><b>Section 88(2)</b> makes welfare paramount and, subject to welfare, directs attention to the parents’ wishes and the wishes of a child old enough to express an independent opinion.</p><p><b>Section 88(3)</b> contains a rebuttable—not automatic—presumption concerning a child below seven and specifically mentions the undesirability of disturbing the child’s life through custody changes. <b>Section 88(4)</b> requires each sibling’s welfare to be considered independently.</p></div></details>
         </section>
 
         <section class="learning-panel" data-learning-panel="3" hidden>
@@ -56,6 +60,7 @@
                 <article><h3>Travel and relocation</h3><p>Taking a child outside Malaysia can raise separate issues. A disputed permanent relocation should not be treated as an ordinary access question and may require legal advice.</p></article>
             </div>
             <aside class="learning-warning"><strong>Avoid fixed assumptions.</strong> Alternate weekends, half the school holidays, or any other schedule is not automatically suitable for every family.</aside>
+            <details class="law-reference"><summary><span>Legal reference</span><strong>Section 89</strong><i>+</i></summary><div><h3>Orders may contain practical conditions</h3><p><b>Section 89(1)</b> permits custody orders to be made subject to conditions. <b>Section 89(2)</b> specifically identifies residence, education, religion, temporary care and control, visits, access at reasonable times and frequency, and a prohibition against taking the child out of Malaysia.</p><blockquote>An access arrangement is therefore not limited to naming the parent with custody; an order may explain how the arrangement is to operate.</blockquote></div></details>
         </section>
 
         <section class="learning-panel" data-learning-panel="4" hidden>
@@ -70,6 +75,7 @@
             <h3 class="expense-title">Build the child’s actual expense picture</h3>
             <div class="discussion-chips access-chips" aria-label="Child expense categories to explore">@foreach (['accommodation' => 'Accommodation', 'food' => 'Food', 'clothing' => 'Clothing', 'education' => 'Education', 'medical' => 'Medical needs', 'transport' => 'Transport', 'childcare' => 'Childcare', 'school-expenses' => 'School expenses', 'other-needs' => 'Other reasonable needs'] as $key => $item)<button type="button" data-expense-example="{{ $key }}"><span class="access-chip-label">{{ $item }}</span><svg class="access-chip-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button>@endforeach</div>
             <ol class="maintenance-steps"><li>Identify reasonable needs.</li><li>Record what each parent currently pays.</li><li>Identify expenses after divorce.</li><li>Consider each parent’s means and circumstances.</li><li>Agree how the needs will be met.</li></ol>
+            <details class="law-reference"><summary><span>Legal reference</span><strong>Sections 92–94</strong><i>+</i></summary><div><h3>Duty, Court orders, and security</h3><blockquote>A parent must maintain or contribute to maintaining the child, whether the child is in that parent’s custody or another person’s custody.</blockquote><p><b>Section 92</b> expressly refers to reasonable accommodation, clothing, food, and education, having regard to the parent’s means and station in life, or payment of their cost.</p><p><b>Section 93</b> sets out the Court’s maintenance powers, including a corresponding power to order a woman to pay or contribute where reasonable having regard to her means. <b>Section 94</b> permits the Court, in its discretion, to order security for maintenance.</p></div></details>
         </section>
 
         <section class="learning-panel" data-learning-panel="5" hidden>
@@ -81,6 +87,7 @@
                 <article><h3>Changing an order</h3><p>The Court can vary custody or maintenance orders. Employment, income, schooling costs, needs, or living arrangements may be relevant, but an existing order does not change automatically.</p></article>
             </div>
             <aside class="learning-warning"><strong>Do not simply ignore an existing Court order.</strong> If circumstances change, consider whether a formal variation is required.</aside>
+            <details class="law-reference"><summary><span>Legal reference</span><strong>Sections 95 and 96</strong><i>+</i></summary><div><h3>Duration and variation</h3><p><b>Section 95, as amended:</b> the current framework addresses age 18, physical or mental disability, and further or higher education or training. The applicable later endpoint matters. The older wording reproduced in the scanned commentary predates the education amendment and should not be used by itself.</p><blockquote>Do not state that every child-maintenance order automatically ends on the eighteenth birthday.</blockquote><p><b>Section 96</b> allows the Court to vary or rescind a custody or maintenance order where it was based on misrepresentation or mistake of fact, or where there has been a material change in circumstances.</p></div></details>
         </section>
 
         <section class="learning-panel" data-learning-panel="6" hidden>
@@ -92,6 +99,7 @@
                 <article><span>Maintenance</span><p>What are the reasonable expenses, what contribution is proposed, and which costs will be paid directly?</p></article>
             </div>
             <aside class="principle-banner"><strong>Agreement to divorce does not resolve child arrangements automatically.</strong><p>A genuine dispute about custody, residence, access, relocation, safety, or maintenance may mean the arrangements are not yet suitable for a straightforward Joint Petition journey.</p></aside>
+            <details class="law-reference"><summary><span>Legal map</span><strong>Part VIII of Act 164</strong><i>+</i></summary><div><ul><li><b>Section 87:</b> meaning of child.</li><li><b>Sections 88–91:</b> custody powers, conditions, fitness, and particular custody rules.</li><li><b>Sections 92–95:</b> maintenance duty, Court powers, security, and duration.</li><li><b>Section 96:</b> variation or rescission of custody and maintenance orders.</li></ul><p>The exact proposed terms and evidence required depend on the family’s circumstances.</p></div></details>
         </section>
 
         <div class="learning-actions"><button class="button button-outline" type="button" data-learning-previous hidden>Previous</button><button class="button" type="button" data-learning-next>Next topic <span>→</span></button></div>

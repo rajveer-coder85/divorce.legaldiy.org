@@ -8,6 +8,12 @@ class JourneyVettingSubmission extends Model
 {
     protected $fillable = [
         'reference',
+        'access_slug',
+        'access_code',
+        'access_code_hash',
+        'access_slug_created_at',
+        'access_enabled_at',
+        'access_invited_at',
         'full_name',
         'email',
         'phone',
@@ -15,8 +21,13 @@ class JourneyVettingSubmission extends Model
         'identity_number',
         'education_level',
         'employment_status',
+        'monthly_income_range',
         'preferred_language',
         'court_experience',
+        'separation_status',
+        'separation_duration',
+        'divorce_stage',
+        'papers_filed',
         'legal_document_confidence',
         'support_needs',
         'agreement_status',
@@ -33,6 +44,10 @@ class JourneyVettingSubmission extends Model
             'selected_topics' => 'array',
             'email_verified_at' => 'datetime',
             'submitted_at' => 'datetime',
+            'access_slug_created_at' => 'datetime',
+            'access_enabled_at' => 'datetime',
+            'access_invited_at' => 'datetime',
+            'access_code' => 'encrypted',
         ];
     }
 

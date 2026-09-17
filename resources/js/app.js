@@ -54,8 +54,75 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
 const journeyFlow = document.querySelector('[data-journey-flow]');
+const inquiryForm = document.querySelector('[data-inquiry-form]');
+const inquiryModal = document.querySelector('[data-inquiry-modal]');
 
-const childrenLearning = document.querySelector('[data-children-learning]');
+document.querySelector('[data-open-inquiry-modal]')?.addEventListener('click', () => inquiryModal?.showModal());
+document.querySelectorAll('[data-close-inquiry-modal]').forEach((button) => button.addEventListener('click', () => inquiryModal?.close()));
+inquiryModal?.addEventListener('click', (event) => { if (event.target === inquiryModal) inquiryModal.close(); });
+
+if (inquiryForm) {
+    const stages = [...inquiryForm.querySelectorAll('[data-inquiry-stage]')];
+    const digits = [...inquiryForm.querySelectorAll('[data-inquiry-digit]')];
+    const messageBox = inquiryForm.querySelector('[data-inquiry-message]');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const showStage = (name) => stages.forEach((stage) => { stage.hidden = stage.dataset.inquiryStage !== name; });
+    const showInquiryMessage = (message = '', success = false) => {
+        messageBox.textContent = message; messageBox.hidden = !message;
+        messageBox.className = `journey-form-message${success ? ' success' : ''}`;
+    };
+    const postInquiry = async (url, payload) => {
+        const response = await fetch(url, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken }, body: JSON.stringify(payload) });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(Object.values(data.errors || {}).flat()[0] || data.message || 'Something went wrong. Please try again.');
+        return data;
+    };
+    const setInquiryBusy = (button, busy, label) => {
+        if (busy) button.dataset.label = button.innerHTML;
+        button.disabled = busy; button.innerHTML = busy ? label : button.dataset.label;
+    };
+    const contact = () => ({ full_name: inquiryForm.elements.full_name.value.trim(), email: inquiryForm.elements.email.value.trim() });
+    const contactValid = () => {
+        const fields = [inquiryForm.elements.full_name, inquiryForm.elements.email];
+        const invalid = fields.find((field) => !field.checkValidity()); invalid?.reportValidity(); return !invalid;
+    };
+
+    digits.forEach((input, index) => {
+        input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(-1); if (input.value) digits[index + 1]?.focus(); });
+        input.addEventListener('keydown', (event) => { if (event.key === 'Backspace' && !input.value) digits[index - 1]?.focus(); });
+    });
+    inquiryForm.querySelector('[data-inquiry-tac]')?.addEventListener('paste', (event) => {
+        const value = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6); if (!value) return;
+        event.preventDefault(); digits.forEach((digit, index) => { digit.value = value[index] || ''; }); digits[Math.min(value.length, 6) - 1]?.focus();
+    });
+
+    const sendInquiryTac = async (button) => {
+        if (!contactValid()) return;
+        setInquiryBusy(button, true, 'Sending…'); showInquiryMessage();
+        try { const data = await postInquiry(inquiryForm.dataset.sendUrl, contact()); inquiryForm.querySelector('[data-inquiry-email]').textContent = contact().email; digits.forEach((digit) => { digit.value = ''; }); showStage('verify'); showInquiryMessage(data.message, true); digits[0]?.focus(); }
+        catch (error) { showInquiryMessage(error.message); }
+        finally { setInquiryBusy(button, false); }
+    };
+    inquiryForm.querySelector('[data-inquiry-send]').addEventListener('click', (event) => sendInquiryTac(event.currentTarget));
+    inquiryForm.querySelector('[data-inquiry-resend]').addEventListener('click', (event) => sendInquiryTac(event.currentTarget));
+    inquiryForm.querySelector('[data-inquiry-change]').addEventListener('click', () => { showInquiryMessage(); showStage('contact'); });
+    inquiryForm.querySelector('[data-inquiry-verify]').addEventListener('click', async (event) => {
+        const code = digits.map((digit) => digit.value).join(''); if (!/^\d{6}$/.test(code)) return showInquiryMessage('Enter all six digits.');
+        setInquiryBusy(event.currentTarget, true, 'Verifying…'); showInquiryMessage();
+        try { const data = await postInquiry(inquiryForm.dataset.verifyUrl, { email: contact().email, code }); inquiryForm.querySelector('[data-inquiry-verified-email]').textContent = contact().email; showStage('details'); showInquiryMessage(data.message, true); }
+        catch (error) { showInquiryMessage(error.message); }
+        finally { setInquiryBusy(event.currentTarget, false); }
+    });
+    inquiryForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); if (!inquiryForm.checkValidity()) return inquiryForm.reportValidity();
+        const button = inquiryForm.querySelector('[type="submit"]'); setInquiryBusy(button, true, 'Sending…'); showInquiryMessage();
+        try { const data = await postInquiry(inquiryForm.dataset.submitUrl, { ...contact(), topic: inquiryForm.elements.topic.value, message: inquiryForm.elements.message.value.trim(), privacy_consent: inquiryForm.elements.privacy_consent.checked ? '1' : '' }); inquiryForm.querySelector('[data-inquiry-reference]').textContent = data.reference; showStage('success'); showInquiryMessage(); }
+        catch (error) { showInquiryMessage(error.message); }
+        finally { setInquiryBusy(button, false); }
+    });
+}
+
+const childrenLearning = document.querySelector('[data-legal-learning], [data-children-learning]');
 
 if (childrenLearning) {
     const panels = [...childrenLearning.querySelectorAll('[data-learning-panel]')];
@@ -183,6 +250,28 @@ if (journeyFlow) {
     let currentStep = '1';
     let agreementStatus = '';
     let resendTimer;
+    const draftFieldNames = ['education_level', 'employment_status', 'monthly_income_range', 'preferred_language', 'court_experience', 'separation_status', 'separation_duration', 'divorce_stage', 'papers_filed', 'legal_document_confidence'];
+    const readDraft = () => {
+        const match = document.cookie.split('; ').find((item) => item.startsWith('legaldiy_journey_draft='));
+        if (!match) return {};
+        try { return JSON.parse(decodeURIComponent(match.slice(match.indexOf('=') + 1))); } catch { return {}; }
+    };
+    const savedDraft = readDraft();
+    const saveDraft = () => {
+        const draft = {};
+        draftFieldNames.forEach((name) => {
+            const field = journeyFlow.querySelector(`[name="${name}"]:checked`) || journeyFlow.querySelector(`[name="${name}"]`);
+            if (field?.value) draft[name] = field.value;
+        });
+        draft.selected_topics = [...topics];
+        document.cookie = `legaldiy_journey_draft=${encodeURIComponent(JSON.stringify(draft))}; Max-Age=2592000; Path=/; SameSite=Lax`;
+    };
+    draftFieldNames.forEach((name) => {
+        if (!savedDraft[name]) return;
+        const field = journeyFlow.querySelector(`[name="${name}"][value="${savedDraft[name]}"]`) || journeyFlow.querySelector(`[name="${name}"]`);
+        if (field) { field.value = savedDraft[name]; if (field.type === 'radio') field.checked = true; }
+    });
+    journeyFlow.addEventListener('change', (event) => { if (draftFieldNames.includes(event.target.name)) saveDraft(); });
 
     const phoneInput = journeyFlow.querySelector('[data-phone-input]');
     const phoneE164 = journeyFlow.querySelector('[data-phone-e164]');
@@ -454,8 +543,16 @@ if (journeyFlow) {
                 item.setAttribute('aria-pressed', String(selected));
             });
             nextButton.disabled = topics.size === 0;
+            saveDraft();
         });
     });
+
+    (savedDraft.selected_topics || []).forEach((topic) => {
+        const button = journeyFlow.querySelector(`[data-journey-topic="${topic}"]`);
+        if (!button) return;
+        topics.add(topic); button.classList.add('selected'); button.setAttribute('aria-pressed', 'true');
+    });
+    if (topics.size) nextButton.disabled = false;
 
     nextButton?.addEventListener('click', () => {
         const identityType = journeyFlow.querySelector('[name="identity_type"]:checked').value;
@@ -467,6 +564,10 @@ if (journeyFlow) {
             ['Mobile number', phoneE164?.value || phoneInput?.value || ''],
             [identityType === 'nric' ? 'NRIC' : 'Passport', maskedIdentity],
             ['Agreement to divorce', agreementStatus === 'agree' ? 'Both agree' : 'Not yet agreed'],
+            ['Monthly income', journeyFlow.querySelector('[name="monthly_income_range"] option:checked').textContent],
+            ['Separation', journeyFlow.querySelector('[name="separation_status"] option:checked').textContent],
+            ['Current stage', journeyFlow.querySelector('[name="divorce_stage"] option:checked').textContent],
+            ['Papers filed', journeyFlow.querySelector('[name="papers_filed"] option:checked').textContent],
             ['Topics', [...topics].map((topic) => topicNames[topic]).join(', ')],
         ];
         const review = journeyFlow.querySelector('[data-journey-review]');
@@ -508,8 +609,13 @@ if (journeyFlow) {
                 identity_number: value('identity_number'),
                 education_level: value('education_level'),
                 employment_status: value('employment_status'),
+                monthly_income_range: value('monthly_income_range'),
                 preferred_language: value('preferred_language'),
                 court_experience: value('court_experience'),
+                separation_status: value('separation_status'),
+                separation_duration: value('separation_duration'),
+                divorce_stage: value('divorce_stage'),
+                papers_filed: value('papers_filed'),
                 legal_document_confidence: Number(journeyFlow.querySelector('[name="legal_document_confidence"]:checked').value),
                 support_needs: value('support_needs'),
                 agreement_status: agreementStatus,
@@ -517,6 +623,7 @@ if (journeyFlow) {
                 privacy_consent: journeyFlow.querySelector('[name="privacy_consent"]').checked,
             });
             journeyFlow.querySelector('[data-submission-reference]').textContent = data.reference;
+            document.cookie = 'legaldiy_journey_draft=; Max-Age=0; Path=/; SameSite=Lax';
             showStep('success');
         } catch (error) {
             showMessage(error.message);

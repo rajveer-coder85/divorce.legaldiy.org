@@ -114,12 +114,32 @@
                     <select name="employment_status" required><option value="">Select one</option><option value="employed">Employed</option><option value="self_employed">Self-employed</option><option value="not_employed">Not currently employed</option><option value="homemaker">Homemaker</option><option value="retired">Retired</option><option value="student">Student</option><option value="prefer_not">Prefer not to say</option></select>
                 </label>
                 <label class="journey-field">
+                    <span>Your approximate monthly income</span>
+                    <select name="monthly_income_range" required><option value="">Select one</option><option value="none">No current income</option><option value="under_2000">Below RM2,000</option><option value="2000_3999">RM2,000–RM3,999</option><option value="4000_5999">RM4,000–RM5,999</option><option value="6000_9999">RM6,000–RM9,999</option><option value="10000_plus">RM10,000 or more</option><option value="prefer_not">Prefer not to say</option></select>
+                </label>
+                <label class="journey-field">
                     <span>Preferred language</span>
                     <select name="preferred_language" required><option value="">Select one</option><option value="english">English</option><option value="bahasa_malaysia">Bahasa Malaysia</option><option value="mandarin">Mandarin</option><option value="tamil">Tamil</option><option value="other">Other</option></select>
                 </label>
                 <label class="journey-field">
                     <span>Experience with court matters</span>
                     <select name="court_experience" required><option value="">Select one</option><option value="none">None</option><option value="some">Some previous experience</option><option value="regular">Regular experience</option></select>
+                </label>
+                <label class="journey-field">
+                    <span>Are you and your spouse already separated?</span>
+                    <select name="separation_status" required><option value="">Select one</option><option value="not_separated">No, we still consider ourselves together</option><option value="separated_same_home">Yes, but living in the same home</option><option value="separated_apart">Yes, living separately</option><option value="uncertain">Not sure</option></select>
+                </label>
+                <label class="journey-field">
+                    <span>How long have you been separated?</span>
+                    <select name="separation_duration" required><option value="">Select one</option><option value="not_applicable">Not applicable</option><option value="under_3_months">Less than 3 months</option><option value="3_6_months">3–6 months</option><option value="7_12_months">7–12 months</option><option value="1_2_years">1–2 years</option><option value="over_2_years">More than 2 years</option></select>
+                </label>
+                <label class="journey-field">
+                    <span>What stage are you at?</span>
+                    <select name="divorce_stage" required><option value="">Select one</option><option value="exploring">Exploring whether to divorce</option><option value="discussing">Discussing arrangements</option><option value="agreed">Both agree and working out details</option><option value="ready_documents">Ready to prepare documents</option><option value="papers_filed">Divorce papers have already been filed</option><option value="court_stage">A Court date or order already exists</option></select>
+                </label>
+                <label class="journey-field">
+                    <span>Have any divorce papers already been filed?</span>
+                    <select name="papers_filed" required><option value="">Select one</option><option value="no">No</option><option value="yes_joint">Yes, a Joint Petition</option><option value="yes_single">Yes, a single or contested petition</option><option value="unsure">Not sure</option></select>
                 </label>
                 <fieldset class="journey-field journey-field-wide confidence-field">
                     <legend>How confident are you reading official or legal documents?</legend>
@@ -134,6 +154,7 @@
                     <textarea name="support_needs" rows="4" maxlength="1000" placeholder="For example: accessibility needs, difficulty reading forms, or a preferred way for us to explain the process."></textarea>
                 </label>
             </div>
+            <p class="journey-draft-note">Your non-sensitive questionnaire choices are saved in a first-party browser cookie for 30 days so you can continue later. Identity numbers, contact details, TAC codes, consent, and free-text notes are never saved in this cookie.</p>
             <div class="journey-actions"><button class="button button-outline" type="button" data-journey-previous>Back</button><button class="button" type="button" data-profile-next>Continue <span>→</span></button></div>
         </section>
 

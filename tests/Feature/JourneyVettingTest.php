@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\JourneyTacMail;
 use App\Models\JourneyVettingSubmission;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -126,9 +127,9 @@ class JourneyVettingTest extends TestCase
             'status' => 'pending_review',
         ]);
 
-        $this->get(route('journey.dashboard'))
+        $this->actingAs(User::factory()->create())->get(route('journey.dashboard', ['tab' => 'submissions']))
             ->assertOk()
-            ->assertSee('Vetting dashboard')
+            ->assertSee('LegalDIY dashboard')
             ->assertSee('Nur Aisyah Ahmad')
             ->assertSee('applicant@example.com')
             ->assertSee('••••••-••-5678')
@@ -145,8 +146,13 @@ class JourneyVettingTest extends TestCase
             'identity_number' => '900101145678',
             'education_level' => 'bachelors',
             'employment_status' => 'employed',
+            'monthly_income_range' => '4000_5999',
             'preferred_language' => 'english',
             'court_experience' => 'none',
+            'separation_status' => 'separated_apart',
+            'separation_duration' => '7_12_months',
+            'divorce_stage' => 'agreed',
+            'papers_filed' => 'no',
             'legal_document_confidence' => 3,
             'support_needs' => 'Please use plain language.',
             'agreement_status' => 'agree',

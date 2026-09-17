@@ -1,77 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex,nofollow,noarchive">
-    <meta name="theme-color" content="#12385f">
-    <title>Vetting Dashboard — LegalDIY</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="dashboard-page">
-    <header class="dashboard-header">
-        <div class="dashboard-shell dashboard-header-inner">
-            <a class="brand" href="{{ url('/') }}" aria-label="LegalDIY home"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo.png') }}" alt=""></span><span class="brand-name">LEGAL <strong>DIY</strong></span></a>
-            <a class="dashboard-back" href="{{ route('journey') }}">View applicant form <span>→</span></a>
-        </div>
-    </header>
-
-    <main class="dashboard-shell dashboard-main">
-        <div class="dashboard-title-row">
-            <div><p class="eyebrow"><span></span>Internal review</p><h1>Vetting dashboard</h1><p>Review applicant submissions and identify who may need additional guidance.</p></div>
-            <span class="temporary-access">Temporary open access</span>
-        </div>
-
-        <aside class="dashboard-warning"><strong>No login is enabled yet.</strong> Identity numbers are masked. Add authentication before using this dashboard outside a controlled environment.</aside>
-
-        <section class="dashboard-stats" aria-label="Submission overview">
-            <article><span>Total submissions</span><strong>{{ number_format($stats['total']) }}</strong></article>
-            <article><span>Pending review</span><strong>{{ number_format($stats['pending']) }}</strong></article>
-            <article><span>Submitted today</span><strong>{{ number_format($stats['today']) }}</strong></article>
-            <article><span>Both agree</span><strong>{{ number_format($stats['agreed']) }}</strong></article>
-        </section>
-
-        <form class="dashboard-filters" method="GET" action="{{ route('journey.dashboard') }}">
-            <label><span class="sr-only">Search submissions</span><input type="search" name="search" value="{{ $search }}" placeholder="Search name, email, or reference"></label>
-            <label><span class="sr-only">Filter by status</span><select name="status"><option value="all" @selected($status === 'all')>All statuses</option><option value="pending_review" @selected($status === 'pending_review')>Pending review</option><option value="reviewed" @selected($status === 'reviewed')>Reviewed</option></select></label>
-            <button class="button" type="submit">Filter</button>
-            @if ($search !== '' || $status !== 'all')<a class="dashboard-clear" href="{{ route('journey.dashboard') }}">Clear</a>@endif
-        </form>
-
-        <section class="submission-list" aria-label="Vetting submissions">
-            @forelse ($submissions as $submission)
-                <article class="submission-card">
-                    <div class="submission-card-head">
-                        <div><span class="submission-ref">{{ $submission->reference }}</span><h2>{{ $submission->full_name }}</h2><a href="mailto:{{ $submission->email }}">{{ $submission->email }}</a></div>
-                        <div class="submission-card-status"><span class="status-chip {{ $submission->status }}">{{ str($submission->status)->replace('_', ' ')->title() }}</span><time datetime="{{ $submission->submitted_at->toIso8601String() }}">{{ $submission->submitted_at->format('d M Y, g:i A') }}</time></div>
-                    </div>
-
-                    <dl class="submission-details">
-                        <div><dt>Phone</dt><dd>{{ $submission->phone ?: 'Not provided' }}</dd></div>
-                        <div><dt>{{ $submission->identity_type === 'nric' ? 'NRIC' : 'Passport' }}</dt><dd>{{ $submission->masked_identity_number }}</dd></div>
-                        <div><dt>Education</dt><dd>{{ str($submission->education_level)->replace('_', ' ')->title() }}</dd></div>
-                        <div><dt>Employment</dt><dd>{{ str($submission->employment_status)->replace('_', ' ')->title() }}</dd></div>
-                        <div><dt>Preferred language</dt><dd>{{ str($submission->preferred_language)->replace('_', ' ')->title() }}</dd></div>
-                        <div><dt>Court experience</dt><dd>{{ str($submission->court_experience)->replace('_', ' ')->title() }}</dd></div>
-                        <div><dt>Document confidence</dt><dd><span class="confidence-score">{{ $submission->legal_document_confidence }}/5</span></dd></div>
-                        <div><dt>Divorce agreement</dt><dd>{{ $submission->agreement_status === 'agree' ? 'Both agree' : 'Not yet agreed' }}</dd></div>
-                    </dl>
-
-                    <div class="submission-topics"><span>Relevant topics</span><div>@foreach ($submission->selected_topics as $topic)<b>{{ str($topic)->replace('_', ' ')->title() }}</b>@endforeach</div></div>
-                    @if ($submission->support_needs)<div class="submission-support"><span>Support notes</span><p>{{ $submission->support_needs }}</p></div>@endif
-                </article>
-            @empty
-                <div class="dashboard-empty"><span>⌕</span><h2>No submissions found</h2><p>New verified vetting forms will appear here.</p></div>
-            @endforelse
-        </section>
-
-        @if ($submissions->hasPages())
-            <nav class="dashboard-pagination" aria-label="Submissions pagination">
-                @if ($submissions->onFirstPage())<span>← Previous</span>@else<a href="{{ $submissions->previousPageUrl() }}">← Previous</a>@endif
-                <b>Page {{ $submissions->currentPage() }} of {{ $submissions->lastPage() }}</b>
-                @if ($submissions->hasMorePages())<a href="{{ $submissions->nextPageUrl() }}">Next →</a>@else<span>Next →</span>@endif
-            </nav>
-        @endif
-    </main>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>Secure Dashboard — LegalDIY</title>@vite(['resources/css/app.css','resources/js/app.js'])</head><body class="dashboard-page">
+<header class="dashboard-header"><div class="dashboard-shell dashboard-header-inner"><a class="brand" href="{{ url('/') }}"><span class="brand-mark"><img src="{{ asset('images/legal-diy-logo.png') }}" alt=""></span><span class="brand-name">LEGAL <strong>DIY</strong></span></a><div class="dashboard-header-actions"><span class="dashboard-user">{{ auth()->user()->name }}</span><form method="POST" action="{{ route('dashboard.logout') }}">@csrf<button class="dashboard-logout">Log out</button></form></div></div></header>
+<main class="dashboard-shell dashboard-main"><div class="dashboard-title-row"><div><p class="eyebrow"><span></span>Internal review</p><h1>LegalDIY dashboard</h1><p>Review inquiries, submissions, and applicant links.</p></div><span class="temporary-access">Secure access</span></div>
+<nav class="dashboard-tabs"><a class="{{ $tab==='inquiries'?'active':'' }}" href="{{ route('journey.dashboard',['tab'=>'inquiries']) }}">Inquiry <b>{{ $inquiryStats['new'] }}</b></a><a class="{{ $tab==='submissions'?'active':'' }}" href="{{ route('journey.dashboard',['tab'=>'submissions']) }}">Submission <b>{{ $stats['pending'] }}</b></a><a class="{{ $tab==='slugs'?'active':'' }}" href="{{ route('journey.dashboard',['tab'=>'slugs']) }}">URL slug creation</a></nav>
+@if($tab==='inquiries')<section class="dashboard-section"><div class="dashboard-section-title"><div><p class="eyebrow"><span></span>Contact requests</p><h2>Verified inquiries</h2></div><span>{{ $inquiryStats['total'] }} total · {{ $inquiryStats['today'] }} today</span></div><form class="dashboard-filters" method="GET"><input type="hidden" name="tab" value="inquiries"><label><span class="sr-only">Search</span><input type="search" name="search" value="{{ $search }}" placeholder="Search reference, name, email, or message"></label><label><span class="sr-only">Status</span><select name="status"><option value="all">All statuses</option><option value="new" @selected($status==='new')>New</option><option value="reviewed" @selected($status==='reviewed')>Reviewed</option></select></label><button class="button">Filter</button></form><div class="inquiry-dashboard-list">@forelse($inquiries as $inquiry)<article class="inquiry-dashboard-card"><div class="inquiry-dashboard-head"><div><span class="submission-ref">{{ $inquiry->reference }}</span><h3>{{ $inquiry->full_name }}</h3><a href="mailto:{{ $inquiry->email }}">{{ $inquiry->email }}</a></div><div><span class="status-chip {{ $inquiry->status }}">{{ str($inquiry->status)->title() }}</span><time>{{ $inquiry->submitted_at->format('d M Y, g:i A') }}</time></div></div><p class="inquiry-topic">{{ str($inquiry->topic)->replace('_',' ')->title() }}</p><p class="inquiry-message">{{ $inquiry->message }}</p><a class="button button-outline inquiry-reply" href="mailto:{{ $inquiry->email }}?subject={{ rawurlencode('Re: '.$inquiry->reference.' — LegalDIY inquiry') }}">Reply by email</a></article>@empty<div class="dashboard-empty"><h2>No inquiries found</h2><p>New email-verified inquiries will appear here.</p></div>@endforelse</div></section>@endif
+@if($tab==='submissions')<section class="dashboard-section"><div class="dashboard-section-title"><div><p class="eyebrow"><span></span>Applicant vetting</p><h2>Journey submissions</h2></div></div><section class="dashboard-stats"><article><span>Total</span><strong>{{ $stats['total'] }}</strong></article><article><span>Pending</span><strong>{{ $stats['pending'] }}</strong></article><article><span>Today</span><strong>{{ $stats['today'] }}</strong></article><article><span>Both agree</span><strong>{{ $stats['agreed'] }}</strong></article></section><form class="dashboard-filters" method="GET"><input type="hidden" name="tab" value="submissions"><label><span class="sr-only">Search</span><input type="search" name="search" value="{{ $search }}" placeholder="Search name, email, or reference"></label><label><span class="sr-only">Status</span><select name="status"><option value="all">All statuses</option><option value="pending_review" @selected($status==='pending_review')>Pending review</option><option value="reviewed" @selected($status==='reviewed')>Reviewed</option></select></label><button class="button">Filter</button></form><section class="submission-list">@forelse($submissions as $submission)<article class="submission-card"><div class="submission-card-head"><div><span class="submission-ref">{{ $submission->reference }}</span><h2>{{ $submission->full_name }}</h2><a href="mailto:{{ $submission->email }}">{{ $submission->email }}</a></div><div class="submission-card-status"><span class="status-chip {{ $submission->status }}">{{ str($submission->status)->replace('_',' ')->title() }}</span><time>{{ $submission->submitted_at->format('d M Y, g:i A') }}</time></div></div><dl class="submission-details"><div><dt>Phone</dt><dd>{{ $submission->phone }}</dd></div><div><dt>{{ strtoupper($submission->identity_type) }}</dt><dd>{{ $submission->masked_identity_number }}</dd></div><div><dt>Education</dt><dd>{{ str($submission->education_level)->replace('_',' ')->title() }}</dd></div><div><dt>Income</dt><dd>{{ str($submission->monthly_income_range?:'Not recorded')->replace('_',' ')->title() }}</dd></div><div><dt>Stage</dt><dd>{{ str($submission->divorce_stage?:'Not recorded')->replace('_',' ')->title() }}</dd></div><div><dt>Agreement</dt><dd>{{ $submission->agreement_status==='agree'?'Both agree':'Not yet agreed' }}</dd></div></dl>@if($submission->support_needs)<div class="submission-support"><span>Support notes</span><p>{{ $submission->support_needs }}</p></div>@endif</article>@empty<div class="dashboard-empty"><h2>No submissions found</h2><p>Verified forms will appear here.</p></div>@endforelse</section></section>@endif
+@if($tab==='slugs')<section class="dashboard-section"><div class="dashboard-section-title"><div><p class="eyebrow"><span></span>Applicant access</p><h2>URL slug creation</h2><p>Create a private, unguessable URL connected to a submission.</p></div></div><div class="slug-list">@forelse($submissions as $submission)<article class="slug-card"><div><span class="submission-ref">{{ $submission->reference }}</span><h3>{{ $submission->full_name }}</h3><small>{{ $submission->email }}</small></div>@if($submission->access_slug)<div class="slug-created"><input type="text" readonly value="{{ route('journey.access',$submission->access_slug) }}"><button type="button" data-copy-url="{{ route('journey.access',$submission->access_slug) }}">Copy URL</button><a href="{{ route('journey.access',$submission->access_slug) }}" target="_blank" rel="noopener">Open</a></div>@else<form method="POST" action="{{ route('journey.dashboard.slug',$submission) }}">@csrf<button class="button">Create secure URL</button></form>@endif</article>@empty<div class="dashboard-empty"><h2>No submissions available</h2><p>A URL can be created after a submission is received.</p></div>@endforelse</div></section>@endif
+</main><script>const accessStates=@json($submissions->mapWithKeys(fn($item)=>[$item->reference=>['enabled'=>(bool)$item->access_enabled_at,'url'=>route('journey.dashboard.access',$item)]])->all()),csrf=@json(csrf_token());document.querySelectorAll('.slug-card').forEach(card=>{const ref=card.querySelector('.submission-ref')?.textContent.trim(),state=accessStates[ref],area=card.querySelector('.slug-created');if(!state||!area)return;const panel=document.createElement('div');panel.className='slug-permission';const status=document.createElement('span');status.className=state.enabled?'enabled':'pending';status.textContent=state.enabled?'Access allowed':'Awaiting your approval';const form=document.createElement('form');form.method='POST';form.action=state.url;form.innerHTML='<input type="hidden" name="_token"><input type="hidden" name="enable"><button class="button" type="submit"></button>';form.elements._token.value=csrf;form.elements.enable.value=state.enabled?'0':'1';form.querySelector('button').textContent=state.enabled?'Revoke access':'Allow access';panel.append(status,form);area.append(panel)});document.querySelectorAll('[data-copy-url]').forEach(button=>button.addEventListener('click',async()=>{await navigator.clipboard.writeText(button.dataset.copyUrl);button.textContent='Copied';setTimeout(()=>button.textContent='Copy URL',1600)}));</script></body></html>

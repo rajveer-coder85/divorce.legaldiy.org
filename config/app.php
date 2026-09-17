@@ -105,6 +105,11 @@ return [
         ),
     ],
 
+    'case_access_tac_exempt_emails' => array_values(array_filter(array_map(
+        fn ($email) => strtolower(trim($email)),
+        explode(',', (string) env('CASE_ACCESS_TAC_EXEMPT_EMAILS', ''))
+    ))),
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
