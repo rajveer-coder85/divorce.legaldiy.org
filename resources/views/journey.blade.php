@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @include('partials.google-tag')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Start your guided LegalDIY Joint Petition journey.">
@@ -13,7 +14,7 @@
     <header class="journey-header">
         <a class="journey-back" href="{{ url('/') }}" aria-label="Back to homepage"><span aria-hidden="true">←</span> Back</a>
         <a class="brand" href="{{ url('/') }}" aria-label="LegalDIY home">
-            <span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo.png') }}" alt=""></span>
+            <span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo-new.png') }}" alt=""></span>
             <span class="brand-name">LEGAL <strong>DIY</strong></span>
         </a>
         <span class="journey-save">Secure vetting form</span>

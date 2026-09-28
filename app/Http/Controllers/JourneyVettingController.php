@@ -24,6 +24,13 @@ class JourneyVettingController extends Controller
 {
     private const TAC_SESSION_KEY = 'journey_vetting_tac';
 
+    public function thankYou(Request $request): View
+    {
+        return view('application-thank-you', [
+            'reference' => $request->session()->get('journey_vetting_reference'),
+        ]);
+    }
+
     public function dashboard(Request $request): View
     {
         $tab = in_array($request->query('tab'), ['inquiries', 'submissions', 'slugs'], true) ? $request->query('tab') : 'inquiries';
@@ -59,7 +66,7 @@ class JourneyVettingController extends Controller
                 ->when($search !== '', fn ($query) => $query->where(fn ($query) => $query
                     ->where('reference', 'like', "%{$search}%")->orWhere('full_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")->orWhere('message', 'like', "%{$search}%")))
-                ->when(in_array($status, ['new', 'reviewed'], true), fn ($query) => $query->where('status', $status))
+                ->when(in_array($status, ['new', 'ongoing', 'completed'], true), fn ($query) => $query->where('status', $status))
                 ->latest('submitted_at')->paginate(15, ['*'], 'inquiry_page')->withQueryString(),
             'inquiryStats' => ['total' => Inquiry::count(), 'new' => Inquiry::where('status', 'new')->count(), 'today' => Inquiry::whereDate('submitted_at', today())->count()],
             'stats' => [
@@ -396,10 +403,12 @@ class JourneyVettingController extends Controller
         ]);
 
         $request->session()->forget('journey_vetting_verified_email');
+        $request->session()->put('journey_vetting_reference', $submission->reference);
 
         return response()->json([
             'message' => 'Your details have been submitted for review.',
             'reference' => $submission->reference,
+            'redirect_url' => route('application.thank-you'),
         ], 201);
     }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\JourneyVettingController;
 use App\Http\Controllers\KnowledgeController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\InquiryDashboardController;
 use App\Http\Controllers\DashboardAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +12,8 @@ Route::get('/', function () {
 });
 
 Route::view('/journey', 'journey')->name('journey');
+Route::get('/application/thank-you', [JourneyVettingController::class, 'thankYou'])
+    ->name('application.thank-you');
 Route::view('/contested-divorce-support', 'contested-divorce-coming-soon')->name('contested-divorce.support');
 Route::view('/knowledge/children-maintenance/examples', 'knowledge.children-maintenance-examples')
     ->name('knowledge.children-maintenance.examples');
@@ -29,6 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/submissions/{submission}/slug', [JourneyVettingController::class, 'createSlug'])->name('journey.dashboard.slug');
     Route::post('/dashboard/submissions/{submission}/access', [JourneyVettingController::class, 'toggleSlugAccess'])->name('journey.dashboard.access');
     Route::post('/dashboard/submissions/{submission}/slug/email', [JourneyVettingController::class, 'sendSlugEmail'])->middleware('throttle:5,10')->name('journey.dashboard.slug.email');
+    Route::get('/dashboard/inquiries/{inquiry}', [InquiryDashboardController::class, 'show'])->name('inquiry.dashboard.show');
+    Route::patch('/dashboard/inquiries/{inquiry}/status', [InquiryDashboardController::class, 'updateStatus'])->name('inquiry.dashboard.status');
+    Route::post('/dashboard/inquiries/{inquiry}/reply', [InquiryDashboardController::class, 'sendReply'])->middleware('throttle:10,10')->name('inquiry.dashboard.reply');
     Route::get('/vetting-dashboard', fn () => redirect()->route('journey.dashboard'));
     Route::post('/dashboard/logout', [DashboardAuthController::class, 'destroy'])->name('dashboard.logout');
 });

@@ -55,16 +55,27 @@ class JourneyVettingTest extends TestCase
             ->withSession(['journey_vetting_verified_email' => 'applicant@example.com'])
             ->postJson(route('journey.submit'), $this->validPayload())
             ->assertCreated()
-            ->assertJsonStructure(['message', 'reference']);
+            ->assertJsonStructure(['message', 'reference', 'redirect_url'])
+            ->assertJsonPath('redirect_url', route('application.thank-you'));
 
         $submission = JourneyVettingSubmission::firstOrFail();
         $this->assertSame('900101-14-5678', $submission->identity_number);
         $this->assertSame('+60123456789', $submission->phone);
         $this->assertSame(['children', 'property'], $submission->selected_topics);
         $this->assertStringStartsWith('LD-', $response->json('reference'));
+        $this->assertSame($response->json('reference'), session('journey_vetting_reference'));
 
         $rawIdentity = DB::table('journey_vetting_submissions')->value('identity_number');
         $this->assertStringNotContainsString('900101', $rawIdentity);
+    }
+
+    public function test_the_thank_you_page_displays_the_submission_reference(): void
+    {
+        $this->withSession(['journey_vetting_reference' => 'LD-260918-ABC123'])
+            ->get(route('application.thank-you'))
+            ->assertOk()
+            ->assertSee('Thank you. Your evaluation is with us.')
+            ->assertSee('LD-260918-ABC123');
     }
 
     public function test_an_unverified_email_cannot_submit_the_vetting_form(): void

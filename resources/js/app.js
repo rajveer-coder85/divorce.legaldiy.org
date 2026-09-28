@@ -621,9 +621,8 @@ if (journeyFlow) {
                 selected_topics: [...topics],
                 privacy_consent: journeyFlow.querySelector('[name="privacy_consent"]').checked,
             });
-            journeyFlow.querySelector('[data-submission-reference]').textContent = data.reference;
             document.cookie = 'legaldiy_journey_draft=; Max-Age=0; Path=/; SameSite=Lax';
-            showStep('success');
+            window.location.assign(data.redirect_url || '/application/thank-you');
         } catch (error) {
             showMessage(error.message);
         } finally {

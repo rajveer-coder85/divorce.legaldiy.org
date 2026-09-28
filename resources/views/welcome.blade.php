@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @include('partials.google-tag')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Learn how a Joint Petition divorce works in Malaysia and apply to be assessed for subsidised legal assistance through counsel engaged by our organisation.">
     <meta name="theme-color" content="#12385f">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>LegalDIY — Your Joint Petition Journey</title>
+    <title>Subsidised Joint Petition Support — LegalDIY</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -14,71 +15,53 @@
     <header class="site-header" data-header>
         <div class="nav-shell">
             <a class="brand" href="#top" aria-label="LegalDIY home">
-                <span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo.png') }}" alt=""></span>
+                <span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo-new.png') }}" alt=""></span>
                 <span class="brand-name">LEGAL <strong>DIY</strong></span>
             </a>
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
                 <span class="sr-only">Open navigation</span><span></span><span></span><span></span>
             </button>
             <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation" data-navigation>
-                <a href="#your-journey">Your Journey</a><a href="#court-journey">Court Journey</a><a href="#topics">Learn</a><a href="#about">About</a>
+                <a href="#your-journey">Your Journey</a><a href="#topics">Learn</a><a href="#cost">Cost</a><a href="#about">About</a>
                 <a class="button button-small" href="{{ route('journey') }}">Apply for Support</a>
             </nav>
         </div>
     </header>
 
     <main id="main-content">
-        <section class="hero" id="top">
+        <section class="hero hero-subsidy" id="top">
             <div class="hero-glow hero-glow-one" aria-hidden="true"></div><div class="hero-glow hero-glow-two" aria-hidden="true"></div>
             <div class="section-shell hero-grid">
                 <div class="hero-copy reveal">
-                    <p class="eyebrow"><span></span>Joint Petition divorce education</p>
-                    <h1>Understand the journey. <em>Move forward together.</em></h1>
-                    <p class="hero-lead">Learn what a Joint Petition divorce involves, what both spouses need to agree on, and how to approach the court process.</p>
-                    <p class="hero-support">Our public education guides are free and available to everyone.</p>
+                    <p class="eyebrow"><span></span>Subsidised Joint Petition support</p>
+                    <h1>Affordable legal support, <em>whatever your income.</em></h1>
+                    <p class="hero-lead">Applications are open to all income levels—there is no maximum income limit for applying. If approved, you will pay no more than <strong>RM 2,000.00 in professional legal fees</strong>, and our organisation will subsidise the remaining legal fees.</p>
+                    <p class="hero-support">Every application is assessed individually. Court filing charges are separate, and approval is not guaranteed.</p>
                     <div class="button-row">
-                        <a class="button" href="#topics">Explore Joint Petition Education <span aria-hidden="true">→</span></a>
-                        <a class="text-link" href="{{ route('journey') }}">Apply for an Assessment <span aria-hidden="true">↘</span></a>
+                        <a class="button" href="{{ route('journey') }}">Apply for an Assessment <span aria-hidden="true">→</span></a>
+                        <a class="text-link" href="#topics">Explore Free Legal Guides <span aria-hidden="true">↘</span></a>
                     </div>
-                    <p class="hero-note"><span aria-hidden="true">✓</span> Free legal education. Clear information. No legal jargon.</p>
+                    <p class="hero-note"><span aria-hidden="true">✓</span> Free legal education is available to everyone.</p>
                 </div>
-                <div class="hero-visual reveal reveal-delay" aria-label="Your path from questions to a clear way forward">
+                <div class="hero-visual reveal reveal-delay" aria-label="Apply, be assessed, and receive support if approved">
                     <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-                    <div class="journey-compass"><span>YOUR JOURNEY</span><strong>Understand</strong><i></i><strong>Discuss</strong><i></i><strong>Agree</strong></div>
-                    <div class="visual-card visual-card-top"><b>01</b><p>Start with your situation</p></div>
-                    <div class="visual-card visual-card-bottom"><b>02</b><p>Move forward together</p></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="subsidy-statement" aria-labelledby="subsidy-statement-title">
-            <div class="section-shell subsidy-statement-inner reveal">
-                <p class="eyebrow light"><span></span>Subsidised legal support</p>
-                <div class="subsidy-statement-content">
-                    <h2 id="subsidy-statement-title">If approved, you pay a maximum of <strong>RM 2,000.00</strong><span>in legal fees.</span></h2>
-                    <div class="subsidy-statement-detail"><p>Our organisation engages legal counsel and covers the remaining legal fees. Support is subject to eligibility assessment and approval, and court filing charges are separate. Submitting an application does not guarantee approval.</p></div>
+                    <div class="journey-compass"><span>YOUR APPLICATION</span><strong>Apply</strong><i></i><strong>Assessment</strong><i></i><strong>Support</strong></div>
+                    <div class="visual-card visual-card-top"><b>✓</b><p>No income ceiling to apply</p></div>
+                    <div class="visual-card visual-card-bottom"><b>RM</b><p>Legal fees capped if approved</p></div>
                 </div>
             </div>
         </section>
 
         <section class="big-picture section-pad" id="your-journey">
             <div class="section-shell">
-                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>The big picture</p><h2>Your journey has <em>two parts.</em></h2><p>First, work out what matters to both of you. Then, understand how your agreement moves through court.</p></div>
-                <div class="journey-pair">
+                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>Your starting point</p><h2>Begin with your <em>personal journey.</em></h2><p>Understand what matters to both of you and identify the arrangements you may need to discuss before preparing a Joint Petition.</p></div>
+                <div class="journey-pair journey-pair-single">
                     <article class="journey-card reveal">
                         <div class="card-number">01</div><div class="card-icon people-icon" aria-hidden="true"><span></span><span></span></div>
                         <p class="card-label">Your Personal Journey</p><h3>Can both of you reach an agreement?</h3>
                         <p>Understand and discuss the arrangements that matter to your situation before preparing a Joint Petition.</p>
                         <ul class="topic-list"><li>Agreement to divorce</li><li>Children</li><li>Property</li><li>Maintenance</li></ul>
                         <a class="card-link" href="{{ route('journey') }}">Explore Your Personal Journey <span>→</span></a>
-                    </article>
-                    <div class="journey-connector" aria-hidden="true"><span>then</span></div>
-                    <article class="journey-card journey-card-court reveal reveal-delay">
-                        <div class="card-number">02</div><div class="card-icon court-icon" aria-hidden="true"><span></span></div>
-                        <p class="card-label">Your Court Journey</p><h3>What happens once you are ready?</h3>
-                        <p>See how your agreed arrangements move into document preparation, filing, court attendance, and finalisation.</p>
-                        <div class="mini-route" aria-hidden="true"><span>Prepare</span><i></i><span>File</span><i></i><span>Finalise</span></div>
-                        <a class="card-link" href="#court-journey">See the Court Journey <span>→</span></a>
                     </article>
                 </div>
             </div>
@@ -109,37 +92,16 @@
             </div>
         </section>
 
-        <section class="transition-section" id="transition"><div class="section-shell transition-inner reveal"><span class="transition-check" aria-hidden="true">→</span><div><p>After both spouses agree</p><h2>The court journey can begin.</h2></div><a class="button button-light" href="#court-journey">See What Happens Next <span>↓</span></a></div></section>
-
-        <section class="court-journey section-pad" id="court-journey">
-            <div class="section-shell">
-                <div class="section-heading split-heading reveal"><div><p class="eyebrow"><span></span>Your court journey</p><h2>From agreement to <em>finalisation.</em></h2></div><p>See the full process at a glance. Each stage will be explained when you are ready for it.</p></div>
-                <ol class="court-timeline">
-                    <li class="timeline-item reveal"><span>01</span><div><h3>Prepare Documents</h3><p>Agreed arrangements are incorporated into the Joint Petition documents.</p></div></li>
-                    <li class="timeline-item reveal"><span>02</span><div><h3>Review & Signing</h3><p>Both spouses review and complete the required signing process.</p></div></li>
-                    <li class="timeline-item reveal"><span>03</span><div><h3>Commissioner for Oaths</h3><p>Relevant documents are affirmed or sworn where required.</p></div></li>
-                    <li class="timeline-item reveal"><span>04</span><div><h3>File With Court</h3><p>The petition and supporting documents enter the court process.</p></div></li>
-                    <li class="timeline-item reveal"><span>05</span><div><h3>Attend Court</h3><p>Both spouses attend the required court hearing.</p></div></li>
-                    <li class="timeline-item reveal"><span>06</span><div><h3>Draft Order</h3><p>The required draft court order is prepared and filed.</p></div></li>
-                    <li class="timeline-item reveal"><span>07</span><div><h3>Decree Nisi</h3><p>The relevant court order is processed following the hearing.</p></div></li>
-                    <li class="timeline-item reveal"><span>08</span><div><h3>Three-Month Period</h3><p>The required period is observed before finalisation.</p></div></li>
-                    <li class="timeline-item reveal"><span>09</span><div><h3>Finalisation</h3><p>The necessary application is completed to make the divorce final.</p></div></li>
-                    <li class="timeline-item reveal"><span>10</span><div><h3>JPN</h3><p>Documents are submitted to Jabatan Pendaftaran Negara where required.</p></div></li>
-                </ol>
-                <div class="center-action"><a class="button button-outline" href="#court-journey">Explore Full Court Journey <span>→</span></a></div>
-            </div>
-        </section>
-
         <section class="cost-section section-pad" id="cost">
             <div class="section-shell">
-                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>Subsidised legal support</p><h2>Joint Petition <em>Divorce Cost</em></h2><p>This website supports applicants who qualify for subsidised legal fees. <strong>Eligible applicants pay a maximum of RM 2,000.00, excluding filing charges.</strong> Our organisation covers the remaining legal fees.</p></div>
+                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>Subsidised legal support</p><h2>Joint Petition <em>Divorce Cost</em></h2><p>Applications are open to people at all income levels—there is no maximum income limit for applying. Every application is assessed individually. <strong>If approved, you will pay no more than RM 2,000.00 in professional legal fees, excluding court filing charges.</strong> Our organisation will subsidise the remaining legal fees.</p></div>
                 <div class="cost-calculator cost-calculator-simple reveal">
                     <aside class="cost-summary" aria-live="polite">
                         <div class="payment-card-grid">
                         <article class="payment-card payment-card-service">
-                            <div class="payment-card-head"><span>Maximum contribution</span><strong>LegalDIY</strong></div>
-                            <b>Up to RM 2,000.00</b>
-                            <p class="support-qualification"><strong>Subject to eligibility</strong> Our organisation covers the remaining legal fees for applicants who qualify.</p>
+                            <div class="payment-card-head"><span>Your legal-fee contribution</span><strong>If approved</strong></div>
+                            <b>Maximum RM 2,000.00</b>
+                            <p class="support-qualification"><strong>No income ceiling</strong> People from all income levels may apply. Support is granted following an individual eligibility assessment, and our organisation subsidises the remaining legal fees for approved applicants.</p>
                         </article>
                         <article class="payment-card payment-card-court">
                             <div class="payment-card-head"><span>Paid by filing stage</span><strong>Court-paper charges</strong></div>
@@ -152,7 +114,7 @@
                         <a class="button" href="{{ route('journey') }}">Apply for Subsidised Legal Support <span>→</span></a>
                     </aside>
                 </div>
-                <p class="cost-note reveal"><strong>About this support:</strong> Subsidised legal fees are subject to our organisation’s eligibility assessment and approval. Court-paper charges are paid when each relevant document is filed—not together upfront. The Penyata Kanak-Kanak charge applies only where children are involved. Exceptional applications, contested issues, valuations, transfers, taxes, translations, revised Court charges, and other third-party costs are not included.</p>
+                <p class="cost-note reveal"><strong>About this support:</strong> People from all income levels may apply. Approval is based on an individual eligibility assessment and is not guaranteed. The RM 2,000.00 limit applies only to professional legal fees. Court-paper charges are paid when each relevant document is filed—not together upfront. The Penyata Kanak-Kanak charge applies only where children are involved. Exceptional applications, contested issues, valuations, transfers, taxes, translations, revised Court charges, and other third-party costs are separate.</p>
             </div>
         </section>
 
@@ -189,6 +151,6 @@
 
     </main>
 
-    <footer class="site-footer"><div class="section-shell footer-grid"><div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo.png') }}" alt=""></span><span class="brand-name">LEGAL <strong>DIY</strong></span></a><p>Learn. Empower. Take action.</p></div><div class="footer-links"><a href="#your-journey">Your Journey</a><a href="#court-journey">Court Journey</a><a href="#topics">Learn</a><a href="#about">About</a></div><p class="disclaimer">LegalDIY provides general legal information, not legal advice. Your circumstances may require advice from a qualified lawyer.</p></div><div class="section-shell footer-bottom"><span>© {{ date('Y') }} LegalDIY</span><span>Legal education for everyone, everywhere.</span></div></footer>
+    <footer class="site-footer"><div class="section-shell footer-grid"><div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><img src="{{ asset('images/legal-diy-logo-new.png') }}" alt=""></span><span class="brand-name">LEGAL <strong>DIY</strong></span></a><p>Learn. Empower. Take action.</p></div><div class="footer-links"><a href="#your-journey">Your Journey</a><a href="#topics">Learn</a><a href="#cost">Cost</a><a href="#about">About</a></div><p class="disclaimer">LegalDIY provides general legal information, not legal advice. Your circumstances may require advice from a qualified lawyer.</p></div><div class="section-shell footer-bottom"><span>© {{ date('Y') }} LegalDIY</span><span>Legal education for everyone, everywhere.</span></div></footer>
 </body>
 </html>

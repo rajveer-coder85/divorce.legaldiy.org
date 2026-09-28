@@ -6,6 +6,7 @@ use App\Models\Inquiry;
 use App\Models\User;
 use App\Mail\CaseAccessGrantedMail;
 use App\Mail\CaseAccessTacMail;
+use App\Mail\InquiryReplyMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -41,7 +42,36 @@ class DashboardAuthTest extends TestCase
     {
         $inquiry = Inquiry::create(['reference' => 'INQ-260904-ABC123', 'full_name' => 'Jane Smith', 'email' => 'jane@example.com', 'topic' => 'costs', 'message' => 'Please explain the filing charges.', 'email_verified_at' => now(), 'submitted_at' => now(), 'status' => 'new']);
         $this->actingAs(User::factory()->create())->get(route('journey.dashboard'))
-            ->assertOk()->assertSee($inquiry->reference)->assertSee($inquiry->message)->assertSee('Reply by email');
+            ->assertOk()->assertSee($inquiry->reference)->assertSee('View conversation')->assertSee('New');
+
+        $this->get(route('inquiry.dashboard.show', $inquiry))
+            ->assertOk()->assertSee($inquiry->message)->assertSee('Draft email')->assertSee('Send with Brevo');
+    }
+
+    public function test_authenticated_user_can_send_and_record_an_inquiry_reply(): void
+    {
+        Mail::fake();
+        $user = User::factory()->create();
+        $inquiry = Inquiry::create(['reference' => 'INQ-260904-REPLY1', 'full_name' => 'Jane Smith', 'email' => 'jane@example.com', 'topic' => 'other', 'message' => 'Please contact me.', 'email_verified_at' => now(), 'submitted_at' => now(), 'status' => 'new']);
+
+        $this->actingAs($user)->post(route('inquiry.dashboard.reply', $inquiry), [
+            'subject' => 'Re: INQ-260904-REPLY1 — LegalDIY enquiry',
+            'body' => 'Thank you. We are reviewing your enquiry.',
+        ])->assertRedirect()->assertSessionHas('reply_sent');
+
+        Mail::assertSent(InquiryReplyMail::class, fn ($mail) => $mail->hasTo($inquiry->email));
+        $this->assertDatabaseHas('inquiry_communications', [
+            'inquiry_id' => $inquiry->id,
+            'user_id' => $user->id,
+            'direction' => 'outbound',
+            'to_email' => $inquiry->email,
+            'subject' => 'Re: INQ-260904-REPLY1 — LegalDIY enquiry',
+        ]);
+        $this->assertSame('ongoing', $inquiry->fresh()->status);
+
+        $this->patch(route('inquiry.dashboard.status', $inquiry), ['status' => 'completed'])
+            ->assertRedirect()->assertSessionHas('status_updated');
+        $this->assertSame('completed', $inquiry->fresh()->status);
     }
 
     public function test_authenticated_user_can_create_a_private_submission_url(): void

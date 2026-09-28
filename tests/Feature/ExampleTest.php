@@ -7,21 +7,27 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    public function test_the_homepage_presents_the_personal_and_court_journeys(): void
+    public function test_the_homepage_presents_the_personal_journey_without_the_court_journey(): void
     {
         $response = $this->get('/');
 
         $response
             ->assertOk()
-            ->assertSee('Joint Petition divorce education')
-            ->assertSee('Understand the journey')
+            ->assertSee('Subsidised Joint Petition support')
+            ->assertSee('Affordable legal support')
+            ->assertSee('whatever your income')
             ->assertSee('Subsidised legal support')
-            ->assertSee('If approved, you pay a maximum of')
-            ->assertSee('engages legal counsel')
-            ->assertSee('Submitting an application does not guarantee approval')
+            ->assertSee('all income levels')
+            ->assertSee('no maximum income limit')
+            ->assertSee('If approved, you will pay no more than')
+            ->assertSee('approval is not guaranteed')
+            ->assertSee('Explore Free Legal Guides')
+            ->assertDontSee('subsidy-statement', false)
             ->assertSee('Your Personal Journey')
-            ->assertSee('Your Court Journey')
-            ->assertSee('From agreement to')
+            ->assertSee('Begin with your')
+            ->assertDontSee('Your Court Journey')
+            ->assertDontSee('court-journey', false)
+            ->assertDontSee('From agreement to')
             ->assertSee('Children &amp; Child Maintenance', false)
             ->assertSee('Property')
             ->assertSee('Alimony')
@@ -34,15 +40,15 @@ class ExampleTest extends TestCase
             ->assertSee('Divorce Cost')
             ->assertSee('RM 2,856–RM 2,872')
             ->assertSee('RM 2,000.00')
-            ->assertSee('pay a maximum of')
+            ->assertSee('no more than')
             ->assertSee('remaining legal fees')
-            ->assertSee('Subject to eligibility')
+            ->assertSee('No income ceiling')
             ->assertSee('Petisyen Perceraian Bersama')
             ->assertSee('RM160.00')
             ->assertSee('Notis Permohonan Menjadikan Decree Nisi Mutlak')
             ->assertSee('Paid progressively')
             ->assertDontSee('Click what applies to you')
-            ->assertSee('qualify for subsidised legal fees')
+            ->assertSee('individual eligibility assessment')
             ->assertSee('payment-card-grid', false)
             ->assertSee('data-inquiry-form', false)
             ->assertSee('Contact Us Now')
@@ -55,6 +61,20 @@ class ExampleTest extends TestCase
     public function test_the_limited_contested_divorce_link_opens_a_coming_soon_page(): void
     {
         $this->get(route('contested-divorce.support'))->assertOk()->assertSee('Detailed guidance is coming soon.')->assertSee('Send an enquiry')->assertSee('data-inquiry-modal', false)->assertSee(route('inquiry.tac.send'));
+    }
+
+    public function test_the_google_ads_lead_event_only_fires_after_a_completed_submission(): void
+    {
+        $this->get(route('application.thank-you'))
+            ->assertOk()
+            ->assertDontSee('AW-18365827534/_BJcCLq9-_ocEM6TwbVE');
+
+        $this->withSession(['journey_vetting_reference' => 'LD-260928-ABC123'])
+            ->get(route('application.thank-you'))
+            ->assertOk()
+            ->assertSee('AW-18365827534/_BJcCLq9-_ocEM6TwbVE')
+            ->assertSee("'currency': 'MYR'", false)
+            ->assertSee('LD-260928-ABC123');
     }
 
     public function test_each_knowledge_guide_has_a_dedicated_page(): void

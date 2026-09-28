@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @include('partials.google-tag')
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="LegalDIY limited contested-divorce support information is coming soon.">
     <meta name="theme-color" content="#12385f"><title>Contested Divorce Support — Coming Soon</title>
