@@ -53,17 +53,19 @@
         </section>
 
         <section class="big-picture section-pad" id="your-journey">
-            <div class="section-shell">
-                <div class="section-heading centered reveal"><p class="eyebrow"><span></span>Your starting point</p><h2>Begin with your <em>personal journey.</em></h2><p>Understand what matters to both of you and identify the arrangements you may need to discuss before preparing a Joint Petition.</p></div>
-                <div class="journey-pair journey-pair-single">
-                    <article class="journey-card reveal">
+            <div class="section-shell personal-journey-layout">
+                <div class="section-heading reveal">
+                    <p class="eyebrow"><span></span>Your starting point</p>
+                    <h2>Begin with your <em>personal journey.</em></h2>
+                    <p>Understand what matters to both of you and identify the arrangements you may need to discuss before preparing a Joint Petition.</p>
+                </div>
+                <article class="journey-card personal-journey-card reveal reveal-delay">
                         <div class="card-number">01</div><div class="card-icon people-icon" aria-hidden="true"><span></span><span></span></div>
                         <p class="card-label">Your Personal Journey</p><h3>Can both of you reach an agreement?</h3>
-                        <p>Understand and discuss the arrangements that matter to your situation before preparing a Joint Petition.</p>
+                        <p>Use the guided assessment to identify the topics you may need to work through together.</p>
                         <ul class="topic-list"><li>Agreement to divorce</li><li>Children</li><li>Property</li><li>Maintenance</li></ul>
                         <a class="card-link" href="{{ route('journey') }}">Explore Your Personal Journey <span>→</span></a>
-                    </article>
-                </div>
+                </article>
             </div>
         </section>
 
