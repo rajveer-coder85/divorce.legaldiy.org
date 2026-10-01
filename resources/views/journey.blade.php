@@ -87,7 +87,7 @@
         <section class="journey-step" data-journey-step="3" hidden>
             <p class="eyebrow"><span></span>Verify your email</p>
             <h1>Enter your six-digit TAC.</h1>
-            <p class="journey-intro">We sent the code to <strong data-tac-email></strong>. It expires in 10 minutes.</p>
+            <p class="journey-intro">We sent the code to <strong data-tac-email></strong>. It expires in 10 minutes. If you cannot find it in your inbox, please check your spam or junk folder.</p>
             <fieldset class="journey-field tac-field">
                 <legend>Email verification code</legend>
                 <div class="tac-boxes" data-tac-boxes>

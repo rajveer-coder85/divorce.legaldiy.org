@@ -426,12 +426,15 @@ body{overflow-x:hidden;font-size:16px}
 .dashboard-filters .button{min-height:46px}
 .dashboard-clear{min-height:42px;display:grid;place-items:center;color:var(--muted);font-size:.8rem;font-weight:700;text-decoration:underline}
 .submission-list{display:grid;gap:1rem}
-.submission-card{padding:1rem;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 12px 35px rgba(18,56,95,.05)}
-.submission-card-head{display:grid;gap:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line)}
+.submission-card{border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 12px 35px rgba(18,56,95,.05);overflow:hidden}
+.submission-card-head{display:grid;gap:1rem;padding:1rem;cursor:pointer;list-style:none}
+.submission-card-head::-webkit-details-marker{display:none}
+.submission-card-head:focus-visible{outline:3px solid rgba(36,155,157,.3);outline-offset:-3px}
 .submission-card-head h2{margin:.3rem 0 .2rem;color:var(--navy);font-family:Georgia,serif;font-size:1.55rem;font-weight:500}
-.submission-card-head a{color:var(--teal-dark);font-size:.82rem;font-weight:700;overflow-wrap:anywhere}
-.submission-card-status{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.submission-email{color:var(--teal-dark);font-size:.82rem;font-weight:700;overflow-wrap:anywhere}
+.submission-card-status{display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap}
 .submission-card-status time{color:var(--muted);font-size:.7rem}
+.submission-toggle{display:inline-flex;align-items:center;gap:.45rem;color:var(--teal-dark);font-size:.7rem;font-weight:800}.submission-toggle b{width:26px;height:26px;display:grid;place-items:center;border:1px solid var(--teal);border-radius:50%;font-size:1.15rem;line-height:1;transition:transform .2s}.submission-card[open] .submission-toggle b{transform:rotate(45deg)}.submission-card[open] .submission-toggle>span{font-size:0}.submission-card[open] .submission-toggle>span::after{content:'Close details';font-size:.7rem}.submission-expanded{padding:0 1rem 1rem;border-top:1px solid var(--line)}
 .status-chip{padding:.35rem .6rem;border-radius:30px;background:#eef3f4;color:var(--muted);font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 .status-chip.pending_review{background:#fff3d7;color:#805e1d}
 .status-chip.reviewed{background:#e5f6f0;color:#147b61}
@@ -440,6 +443,7 @@ body{overflow-x:hidden;font-size:16px}
 .submission-details>div{min-width:0;padding:.75rem .6rem;border-bottom:1px solid #edf2f2}
 .submission-details dt{color:var(--muted);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .submission-details dd{margin:.2rem 0 0;color:var(--navy);font-size:.78rem;font-weight:800;overflow-wrap:anywhere}
+.submission-details .submission-detail-wide{grid-column:1/-1}
 .confidence-score{color:var(--teal-dark)}
 .submission-topics{padding:.85rem;border-radius:9px;background:var(--cream)}
 .submission-topics>div{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.55rem}
@@ -515,8 +519,8 @@ body{overflow-x:hidden;font-size:16px}
     .dashboard-title-row{grid-template-columns:1fr auto;align-items:end}
     .dashboard-stats{grid-template-columns:repeat(4,1fr)}
     .dashboard-filters{grid-template-columns:minmax(240px,1fr) 190px auto auto;align-items:center}
-    .submission-card{padding:1.35rem}
-    .submission-card-head{grid-template-columns:1fr auto;align-items:start}
+    .submission-card-head{grid-template-columns:1fr auto;align-items:start;padding:1.35rem}
+    .submission-expanded{padding:0 1.35rem 1.35rem}
     .submission-card-status{align-items:flex-end;flex-direction:column}
     .submission-details{grid-template-columns:repeat(4,1fr)}
 }
@@ -525,5 +529,6 @@ body{overflow-x:hidden;font-size:16px}
     .dashboard-header-inner{min-height:82px}
     .dashboard-main{padding-top:54px}
     .dashboard-warning{display:flex;align-items:center;gap:.4rem}
-    .submission-card{padding:1.6rem}
+    .submission-card-head{padding:1.6rem}
+    .submission-expanded{padding:0 1.6rem 1.6rem}
 }

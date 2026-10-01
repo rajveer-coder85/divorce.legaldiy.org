@@ -134,7 +134,7 @@
                         <button class="button" type="button" data-inquiry-send>Contact Us Now <span>→</span></button>
                     </div>
                     <div data-inquiry-stage="verify" hidden>
-                        <div class="inquiry-verify-heading"><span aria-hidden="true">✉</span><div><strong>Check your email</strong><p class="inquiry-stage-note">Enter the six-digit TAC sent to <b data-inquiry-email></b> to submit your enquiry.</p></div></div>
+                        <div class="inquiry-verify-heading"><span aria-hidden="true">✉</span><div><strong>Check your email</strong><p class="inquiry-stage-note">Enter the six-digit TAC sent to <b data-inquiry-email></b> to submit your enquiry. If you cannot find it in your inbox, please check your spam or junk folder.</p></div></div>
                         <div class="tac-boxes" data-inquiry-tac aria-label="Six-digit verification code">@for ($digit = 1; $digit <= 6; $digit++)<input type="text" inputmode="numeric" autocomplete="{{ $digit === 1 ? 'one-time-code' : 'off' }}" pattern="[0-9]" maxlength="1" required aria-label="Verification code digit {{ $digit }}" data-inquiry-digit>@endfor</div>
                         <div class="inquiry-button-row"><button class="button button-outline" type="button" data-inquiry-change>Edit details</button><button class="button" type="submit">Verify &amp; Submit <span>→</span></button></div>
                         <button class="quiet-button inquiry-resend" type="button" data-inquiry-resend>Send another TAC</button>

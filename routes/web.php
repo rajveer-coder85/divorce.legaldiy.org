@@ -34,7 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/submissions/{submission}/slug/email', [JourneyVettingController::class, 'sendSlugEmail'])->middleware('throttle:5,10')->name('journey.dashboard.slug.email');
     Route::get('/dashboard/inquiries/{inquiry}', [InquiryDashboardController::class, 'show'])->name('inquiry.dashboard.show');
     Route::patch('/dashboard/inquiries/{inquiry}/status', [InquiryDashboardController::class, 'updateStatus'])->name('inquiry.dashboard.status');
-    Route::post('/dashboard/inquiries/{inquiry}/reply', [InquiryDashboardController::class, 'sendReply'])->middleware('throttle:10,10')->name('inquiry.dashboard.reply');
     Route::get('/vetting-dashboard', fn () => redirect()->route('journey.dashboard'));
     Route::post('/dashboard/logout', [DashboardAuthController::class, 'destroy'])->name('dashboard.logout');
 });

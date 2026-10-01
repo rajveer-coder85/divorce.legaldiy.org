@@ -6,7 +6,6 @@ use App\Models\Inquiry;
 use App\Models\User;
 use App\Mail\CaseAccessGrantedMail;
 use App\Mail\CaseAccessTacMail;
-use App\Mail\InquiryReplyMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -45,31 +44,19 @@ class DashboardAuthTest extends TestCase
             ->assertOk()->assertSee($inquiry->reference)->assertSee('View conversation')->assertSee('New');
 
         $this->get(route('inquiry.dashboard.show', $inquiry))
-            ->assertOk()->assertSee($inquiry->message)->assertSee('Draft email')->assertSee('Send with Brevo');
+            ->assertOk()
+            ->assertSee($inquiry->message)
+            ->assertSee('Customer history')
+            ->assertDontSee('Draft email')
+            ->assertDontSee('Send with Brevo');
     }
 
-    public function test_authenticated_user_can_send_and_record_an_inquiry_reply(): void
+    public function test_authenticated_user_can_update_an_inquiry_status(): void
     {
-        Mail::fake();
         $user = User::factory()->create();
-        $inquiry = Inquiry::create(['reference' => 'INQ-260904-REPLY1', 'full_name' => 'Jane Smith', 'email' => 'jane@example.com', 'topic' => 'other', 'message' => 'Please contact me.', 'email_verified_at' => now(), 'submitted_at' => now(), 'status' => 'new']);
+        $inquiry = Inquiry::create(['reference' => 'INQ-260904-STATUS', 'full_name' => 'Jane Smith', 'email' => 'jane@example.com', 'topic' => 'other', 'message' => 'Please contact me.', 'email_verified_at' => now(), 'submitted_at' => now(), 'status' => 'new']);
 
-        $this->actingAs($user)->post(route('inquiry.dashboard.reply', $inquiry), [
-            'subject' => 'Re: INQ-260904-REPLY1 — LegalDIY enquiry',
-            'body' => 'Thank you. We are reviewing your enquiry.',
-        ])->assertRedirect()->assertSessionHas('reply_sent');
-
-        Mail::assertSent(InquiryReplyMail::class, fn ($mail) => $mail->hasTo($inquiry->email));
-        $this->assertDatabaseHas('inquiry_communications', [
-            'inquiry_id' => $inquiry->id,
-            'user_id' => $user->id,
-            'direction' => 'outbound',
-            'to_email' => $inquiry->email,
-            'subject' => 'Re: INQ-260904-REPLY1 — LegalDIY enquiry',
-        ]);
-        $this->assertSame('ongoing', $inquiry->fresh()->status);
-
-        $this->patch(route('inquiry.dashboard.status', $inquiry), ['status' => 'completed'])
+        $this->actingAs($user)->patch(route('inquiry.dashboard.status', $inquiry), ['status' => 'completed'])
             ->assertRedirect()->assertSessionHas('status_updated');
         $this->assertSame('completed', $inquiry->fresh()->status);
     }
@@ -86,6 +73,11 @@ class DashboardAuthTest extends TestCase
         $this->post(route('journey.dashboard.slug', $submission))->assertRedirect(route('dashboard.login'));
         $this->actingAs(User::factory()->create())->post(route('journey.dashboard.slug', $submission))
             ->assertRedirect(route('journey.dashboard', ['tab' => 'slugs']));
+        $this->get(route('journey.dashboard', ['tab' => 'submissions', 'status' => 'pending_review']))
+            ->assertOk()
+            ->assertSee('View details')
+            ->assertSee('Document confidence')
+            ->assertSee('900101145678');
         $submission->refresh();
         $this->assertNotNull($submission->access_slug);
         $this->get(route('journey.access', $submission->access_slug))->assertOk()->assertSee('Access is not yet available')->assertDontSee($submission->reference);

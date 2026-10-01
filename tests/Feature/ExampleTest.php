@@ -53,6 +53,7 @@ class ExampleTest extends TestCase
             ->assertSee('data-inquiry-form', false)
             ->assertSee('Contact Us Now')
             ->assertSee('Verify &amp; Submit', false)
+            ->assertSee('please check your spam or junk folder')
             ->assertSee('Penyata Kanak-Kanak')
             ->assertDontSee('Do both of you want to divorce?')
             ->assertDontSee('Agreement checkpoint');
@@ -131,6 +132,7 @@ class ExampleTest extends TestCase
             ->assertSee('Do both of you want to divorce?')
             ->assertSee('Tell us who you are.')
             ->assertSee('Enter your six-digit TAC.')
+            ->assertSee('please check your spam or junk folder')
             ->assertSee('Help us tailor the guidance.')
             ->assertSee('Your approximate monthly income')
             ->assertSee('already separated')

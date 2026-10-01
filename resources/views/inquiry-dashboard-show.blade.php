@@ -28,7 +28,6 @@
             </form>
         </section>
 
-        @if(session('reply_sent'))<div class="case-success-note">Email sent through Brevo and added to the communication history.</div>@endif
         @if(session('status_updated'))<div class="case-success-note">Enquiry status updated.</div>@endif
         @if($errors->any())<div class="dashboard-login-error">{{ $errors->first() }}</div>@endif
 
@@ -57,18 +56,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="communication-note">This history records the original website enquiry and emails sent from this dashboard.</p>
-        </section>
-
-        <section class="reply-composer">
-            <div><p class="eyebrow"><span></span>Draft email</p><h2>Reply to {{ $inquiry->full_name }}</h2><p>The email will be delivered through Brevo and saved in the communication history after it is sent successfully.</p></div>
-            <form method="POST" action="{{ route('inquiry.dashboard.reply', $inquiry) }}">
-                @csrf
-                <label><span>To</span><input type="email" value="{{ $inquiry->email }}" readonly></label>
-                <label><span>Subject</span><input type="text" name="subject" maxlength="200" required value="{{ old('subject', 'Re: '.$inquiry->reference.' — LegalDIY enquiry') }}"></label>
-                <label><span>Message</span><textarea name="body" rows="9" minlength="2" maxlength="10000" required placeholder="Write your reply here…">{{ old('body') }}</textarea></label>
-                <button class="button" type="submit">Send with Brevo <span>→</span></button>
-            </form>
+            <p class="communication-note">This history records the original website enquiry and any emails previously sent from this dashboard.</p>
         </section>
     </main>
 </body>
